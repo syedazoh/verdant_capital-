@@ -4,15 +4,18 @@ Add PDFs named TICKER__report.pdf to data_cache/pdfs/, e.g. NEE__2025_report.pdf
 User-uploaded disclosures are not independently authenticated.
 Run: python -m data.build_rag
 """
+
 import hashlib
 import re
 from functools import lru_cache
 from pathlib import Path
+
 import config
 
 
 def pdf_chunks(pdf_path, ticker, chunk_size=850, overlap=120):
     from pypdf import PdfReader
+
     pdf_path = Path(pdf_path)
     if not (0 <= overlap < chunk_size):
         raise ValueError("Invalid chunk overlap")
@@ -20,26 +23,36 @@ def pdf_chunks(pdf_path, ticker, chunk_size=850, overlap=120):
     for page_index, page in enumerate(reader.pages, start=1):
         text = (page.extract_text() or "").strip()
         for start in range(0, len(text), chunk_size - overlap):
-            chunk = text[start:start + chunk_size].strip()
+            chunk = text[start : start + chunk_size].strip()
             if len(chunk) < 65:
                 continue
-            digest = hashlib.sha256(f"{pdf_path.name}:{page_index}:{start}:{chunk}".encode()).hexdigest()[:24]
+            digest = hashlib.sha256(
+                f"{pdf_path.name}:{page_index}:{start}:{chunk}".encode()
+            ).hexdigest()[:24]
             year_match = re.search(r"(?:19|20)\d{2}", pdf_path.stem)
             year = year_match.group(0) if year_match else "unknown"
-            yield {"id": digest, "text": chunk,
-                   "ticker": ticker, "source": pdf_path.name, "page": page_index,
-                   "report_year": year, "mode": "uploaded_pdf",
-                   "citation": f"[{pdf_path.name} p.{page_index}]"}
+            yield {
+                "id": digest,
+                "text": chunk,
+                "ticker": ticker,
+                "source": pdf_path.name,
+                "page": page_index,
+                "report_year": year,
+                "mode": "uploaded_pdf",
+                "citation": f"[{pdf_path.name} p.{page_index}]",
+            }
 
 
 @lru_cache(maxsize=1)
 def _embedding_model():
     from sentence_transformers import SentenceTransformer
+
     return SentenceTransformer("all-MiniLM-L6-v2")
 
 
 def _collection():
     import chromadb
+
     client = chromadb.PersistentClient(path=str(config.RAG_DIR))
     return client.get_or_create_collection("issuer_esg_v2")
 
@@ -63,8 +76,10 @@ def main():
             ids=[e["id"] for e in entries],
             documents=[e["text"] for e in entries],
             embeddings=model.encode([e["text"] for e in entries]).tolist(),
-            metadatas=[{k: e[k] for k in ("ticker", "source", "page", "report_year", "mode", "citation")}
-                       for e in entries],
+            metadatas=[
+                {k: e[k] for k in ("ticker", "source", "page", "report_year", "mode", "citation")}
+                for e in entries
+            ],
         )
         indexed += len(entries)
     print(f"Indexed/upserted {indexed} page-scoped chunks into {config.RAG_DIR}")
@@ -82,15 +97,22 @@ def query(ticker, query_text=None, k=5):
         if not count:
             return []
         model = _embedding_model()
-        q = query_text or f"{ticker} emissions intensity targets baselines independent assurance capex"
+        q = (
+            query_text
+            or f"{ticker} emissions intensity targets baselines independent assurance capex"
+        )
         result = collection.query(
             query_embeddings=model.encode([q]).tolist(),
-            where={"ticker": ticker}, n_results=min(k, count),
+            where={"ticker": ticker},
+            n_results=min(k, count),
         )
         documents = result.get("documents", [[]])[0]
         metadatas = result.get("metadatas", [[]])[0]
-        return [dict(meta, text=doc) for doc, meta in zip(documents, metadatas)
-                if meta.get("ticker") == ticker]
+        return [
+            dict(meta, text=doc)
+            for doc, meta in zip(documents, metadatas, strict=False)
+            if meta.get("ticker") == ticker
+        ]
     except (ImportError, ValueError, RuntimeError, OSError) as error:
         print(f"[rag] retrieval unavailable: {type(error).__name__}")
         return []

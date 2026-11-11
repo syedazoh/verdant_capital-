@@ -6,23 +6,35 @@ and the held-out labels are used only for evaluation.
 
 Usage: python -m challenge.c02_rare_event
 """
-from dataclasses import dataclass
+
 import json
+from dataclasses import dataclass
 from pathlib import Path
-import config
 
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import (
-    auc, average_precision_score, confusion_matrix, precision_recall_curve,
-    precision_score, recall_score, f1_score,
+    auc,
+    average_precision_score,
+    confusion_matrix,
+    f1_score,
+    precision_recall_curve,
+    precision_score,
+    recall_score,
 )
 from sklearn.model_selection import train_test_split
 
+import config
+from data.files import write_json
+
 FEATURES = [
-    "vague_language_ratio", "sentiment_gap", "missing_baseline",
-    "no_third_party_verif", "capex_backing_ratio", "intensity_anomaly",
+    "vague_language_ratio",
+    "sentiment_gap",
+    "missing_baseline",
+    "no_third_party_verif",
+    "capex_backing_ratio",
+    "intensity_anomaly",
 ]
 N_TRAIN, N_EVAL = 20_000, 5_000
 POS_RATE = 0.01
@@ -36,22 +48,26 @@ def make_data(n: int, pos_rate: float, rng: np.random.Generator):
     n_pos = int(round(n * pos_rate))
     if n_pos < 1 or n_pos >= n:
         raise ValueError("Dataset must contain both classes")
-    negative = pd.DataFrame({
-        "vague_language_ratio": rng.normal(0.15, 0.05, n - n_pos),
-        "sentiment_gap": rng.normal(0.10, 0.05, n - n_pos),
-        "missing_baseline": rng.binomial(1, 0.08, n - n_pos),
-        "no_third_party_verif": rng.binomial(1, 0.10, n - n_pos),
-        "capex_backing_ratio": rng.normal(0.55, 0.15, n - n_pos),
-        "intensity_anomaly": rng.normal(0.05, 0.05, n - n_pos),
-    })
-    positive = pd.DataFrame({
-        "vague_language_ratio": rng.normal(0.38, 0.22, n_pos),
-        "sentiment_gap": rng.normal(0.40, 0.24, n_pos),
-        "missing_baseline": rng.binomial(1, 0.50, n_pos),
-        "no_third_party_verif": rng.binomial(1, 0.62, n_pos),
-        "capex_backing_ratio": rng.normal(0.32, 0.22, n_pos),
-        "intensity_anomaly": rng.normal(0.48, 0.30, n_pos),
-    })
+    negative = pd.DataFrame(
+        {
+            "vague_language_ratio": rng.normal(0.15, 0.05, n - n_pos),
+            "sentiment_gap": rng.normal(0.10, 0.05, n - n_pos),
+            "missing_baseline": rng.binomial(1, 0.08, n - n_pos),
+            "no_third_party_verif": rng.binomial(1, 0.10, n - n_pos),
+            "capex_backing_ratio": rng.normal(0.55, 0.15, n - n_pos),
+            "intensity_anomaly": rng.normal(0.05, 0.05, n - n_pos),
+        }
+    )
+    positive = pd.DataFrame(
+        {
+            "vague_language_ratio": rng.normal(0.38, 0.22, n_pos),
+            "sentiment_gap": rng.normal(0.40, 0.24, n_pos),
+            "missing_baseline": rng.binomial(1, 0.50, n_pos),
+            "no_third_party_verif": rng.binomial(1, 0.62, n_pos),
+            "capex_backing_ratio": rng.normal(0.32, 0.22, n_pos),
+            "intensity_anomaly": rng.normal(0.48, 0.30, n_pos),
+        }
+    )
     X = pd.concat([negative, positive], ignore_index=True)
     y = np.array([0] * (n - n_pos) + [1] * n_pos, dtype=int)
     permutation = rng.permutation(n)
@@ -72,12 +88,17 @@ class Trial:
     metrics: dict
 
 
-def run_trial(seed: int = 7, n_train: int = N_TRAIN,
-              n_eval: int = N_EVAL, n_estimators: int = 200) -> Trial:
+def run_trial(
+    seed: int = 7, n_train: int = N_TRAIN, n_eval: int = N_EVAL, n_estimators: int = 200
+) -> Trial:
     n = n_train + n_eval
     X, y = make_data(n, POS_RATE, np.random.default_rng(seed))
     X_train, X_eval, _, y_eval = train_test_split(
-        X, y, test_size=n_eval, random_state=seed, stratify=y,
+        X,
+        y,
+        test_size=n_eval,
+        random_state=seed,
+        stratify=y,
     )
     X_train = X_train.reset_index(drop=True)
     X_eval = X_eval.reset_index(drop=True)
@@ -85,8 +106,10 @@ def run_trial(seed: int = 7, n_train: int = N_TRAIN,
         "Evaluation split does not match requested 99:1 class balance"
     )
     model = IsolationForest(
-        n_estimators=n_estimators, contamination=POS_RATE,
-        random_state=seed, n_jobs=-1,
+        n_estimators=n_estimators,
+        contamination=POS_RATE,
+        random_state=seed,
+        n_jobs=-1,
     )
     model.fit(X_train)  # no ground-truth labels used
     scores = -model.decision_function(X_eval)  # larger = more anomalous
@@ -107,14 +130,16 @@ def run_trial(seed: int = 7, n_train: int = N_TRAIN,
         "precision": round(float(precision_score(y_eval, y_pred, zero_division=0)), 6),
         "recall": round(float(recall_score(y_eval, y_pred, zero_division=0)), 6),
         "f1": round(float(f1_score(y_eval, y_pred, zero_division=0)), 6),
-        "tn": tn, "fp": fp, "fn": fn, "tp": tp,
+        "tn": tn,
+        "fp": fp,
+        "fn": fn,
+        "tp": tp,
         "predicted_positives": int(y_pred.sum()),
         "precision_at_1pct_flag_rate": round(top_precision, 6),
         "lift_over_random": round(top_precision / POS_RATE, 4),
         "threshold_anomaly_score": 0.0,
     }
-    return Trial(seed, model, X_train, X_eval, y_eval, scores, y_pred,
-                 precision, recall, metrics)
+    return Trial(seed, model, X_train, X_eval, y_eval, scores, y_pred, precision, recall, metrics)
 
 
 def evaluate(seeds=SEEDS, n_train=N_TRAIN, n_eval=N_EVAL, n_estimators=200):
@@ -122,8 +147,13 @@ def evaluate(seeds=SEEDS, n_train=N_TRAIN, n_eval=N_EVAL, n_estimators=200):
     if not trials:
         raise ValueError("At least one seed is required")
     entries = [trial.metrics for trial in trials]
-    mean = lambda key: float(np.mean([t[key] for t in entries]))
-    std = lambda key: float(np.std([t[key] for t in entries]))
+
+    def mean(key):
+        return float(np.mean([t[key] for t in entries]))
+
+    def std(key):
+        return float(np.std([t[key] for t in entries]))
+
     first = trials[0]
     # Keep the entire curve, including the endpoints: no downsampling distortions.
     curve = {
@@ -134,8 +164,10 @@ def evaluate(seeds=SEEDS, n_train=N_TRAIN, n_eval=N_EVAL, n_estimators=200):
     report = {
         "challenge": "C02 Severe Class Imbalance / Rare-Event Stress (99:1)",
         "data_type": "synthetic",
-        "methodology": (f"{len(trials)} independent seeds, each with {n_train:,} training "
-                        f"and {n_eval:,} held-out evaluation samples, exactly 1% positive"),
+        "methodology": (
+            f"{len(trials)} independent seeds, each with {n_train:,} training "
+            f"and {n_eval:,} held-out evaluation samples, exactly 1% positive"
+        ),
         "model": f"IsolationForest({n_estimators} trees, contamination=0.01)",
         "features": FEATURES,
         "seeds": [int(s) for s in seeds],
@@ -144,7 +176,7 @@ def evaluate(seeds=SEEDS, n_train=N_TRAIN, n_eval=N_EVAL, n_estimators=200):
         "eval_size": int(n_eval),
         "positive_count": first.metrics["positive_count"],
         "negative_count": first.metrics["negative_count"],
-        "pr_auc": round(mean("pr_auc"), 4),   # legacy dashboard compatibility
+        "pr_auc": round(mean("pr_auc"), 4),  # legacy dashboard compatibility
         "pr_auc_mean": round(mean("pr_auc"), 4),
         "pr_auc_std": round(std("pr_auc"), 4),
         "average_precision_mean": round(mean("average_precision"), 4),
@@ -156,9 +188,13 @@ def evaluate(seeds=SEEDS, n_train=N_TRAIN, n_eval=N_EVAL, n_estimators=200):
         "majority_class_accuracy_trap": 0.99,
         "baseline_average_precision": POS_RATE,
         "predicted_positives": first.metrics["predicted_positives"],
-        "tp": first.metrics["tp"], "fp": first.metrics["fp"],
-        "tn": first.metrics["tn"], "fn": first.metrics["fn"],
-        "no_majority_collapse": bool(all(t["tp"] > 0 and t["predicted_positives"] > 0 for t in entries)),
+        "tp": first.metrics["tp"],
+        "fp": first.metrics["fp"],
+        "tn": first.metrics["tn"],
+        "fn": first.metrics["fn"],
+        "no_majority_collapse": bool(
+            all(t["tp"] > 0 and t["predicted_positives"] > 0 for t in entries)
+        ),
         "verdict": (
             "Synthetic 99:1 stress test only. Model evaluated on held-out labels; "
             "performance on real ESG disclosures remains unverified."
@@ -171,8 +207,8 @@ def main():
     report, curve = evaluate()
     out = Path(config.DATA_DIR)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "c02_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    (out / "c02_pr_curve.json").write_text(json.dumps(curve), encoding="utf-8")
+    write_json(out / "c02_report.json", report)
+    write_json(out / "c02_pr_curve.json", curve)
     print(json.dumps({k: v for k, v in report.items() if k != "trials"}, indent=2))
     if not report["no_majority_collapse"]:
         raise SystemExit("C02 FAIL: majority-class collapse detected")

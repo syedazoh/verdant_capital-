@@ -1,211 +1,279 @@
-# 🌿 Verdant Capital — Decision Intelligence Studio
+<div align="center">
 
-**Team Cypher hackathon MVP** · [Original repository](https://github.com/Fayaz-Ali56/Verdant-Capital/tree/zohtest)
+# Verdant Capital
 
-Verdant Capital is an **auditable research and investment-decision simulator**. A
-LangGraph boardroom coordinates **exactly three specialists**: (1) ESG Verifier,
-(2) Carbon & Market Analyst, (3) Portfolio Optimizer. A persistence layer logs
-recommendations. A separate, clearly labeled synthetic feedback simulation
-illustrates how evaluation outcomes can modify future influence weights.
+### Conviction, with a paper trail.
 
-The **Risk Lab** solves the assigned challenge demonstrations:
+An investment research studio that makes evidence gaps, portfolio constraints, and the economics of a decision visible.
 
-- **C02 — Rare-event stress:** held-out 99:1 synthetic class split,
-  PR-AUC, average precision, precision, recall, F1, confusion matrix,
-  majority-class baseline, top-1% alert precision, five-seed repeatability.
-- **C06 — Regulatory XAI:** three real held-out observations from the **same
-  Isolation Forest** with permutation SHAP feature-attribution PNGs, audit JSON,
-  model scores and checked additive reconstruction.
-- **C13 — Decision economics:** editable USD audit/missed-positive costs, an exact
-  validation-loss threshold search, and a separate held-out confusion matrix,
-  economic loss comparison and downloadable audit. See [C13 methodology](docs/C13_DECISION_ECONOMICS.md).
+**Three specialist roles · Constrained allocation · Inspectable evidence**
 
-**Important:** The C02/C06/C13 datasets are **synthetically generated**. The scores
-are NOT validated fraud detection on real companies. Fictional demo issuers
-`SOLR`, `WIND` and `FOSS` are not listed securities. The software neither
-approves loans nor trades assets.
+[Quick start](#quick-start) · [Judge walkthrough](#the-four-minute-walkthrough) · [Architecture](#architecture) · [QA report](QA_REPORT.md) · [Changes](CHANGELOG.md)
 
-## New: redesigned research workspace
+</div>
 
-The Streamlit frontend has been rebuilt as a premium dark operational workspace with four focused views: **Investment boardroom**, **Risk Lab (C02/C06)**, **Market intelligence**, and **Audit trail**. It includes an instant *fictional preview*, transparent policy ledger, interactive charts, model explainability panels and downloadable audit reports. See [`DESIGN.md`](DESIGN.md) and [`docs/FRONTEND_HANDOFF.md`](docs/FRONTEND_HANDOFF.md).
+![Actual Streamlit boardroom with a fictional investment review](docs/screenshots/boardroom-desktop.png)
 
-A static (noninteractive) design specimen is at `docs/STUDIO_PREVIEW.html`; screenshots are also in `docs/`. They are not captures of the live Streamlit application. The Risk Lab includes an explicitly synthetic benchmark snapshot so its evaluation is visible on a fresh checkout.
+> Research prototype. No trades or credit decisions. Fictional examples and synthetic benchmarks are labeled. Historical price signals are estimates, not investment advice or demonstrated future returns.
 
-## Quick start — Windows PowerShell
+## What it does
 
-From the project folder with Python 3.11 or 3.12:
+Verdant brings a mandate through three distinct responsibilities: examine ESG
+source evidence, summarize dated market signals, and calculate an allocation
+under explicit constraints. A bounded evidence review handles the implemented
+high-ESG-risk / bullish-market conflict. A deterministic memo records the result.
+
+- **Investment boardroom:** risk settings, exposure caps, cash fallback, specialist evidence, hypothetical demo stress events, and JSON export.
+- **Risk Lab:** C02 rare-event detection, C06 feature attribution, and C13 cost-sensitive threshold selection with a held-out economic audit.
+- **Market intelligence:** cached adjusted prices, a KRBN carbon-related ETF projection, and a separately labeled feedback simulation.
+- **Audit trail:** timestamped SQLite recommendations, policy reason codes, provenance and evidence citations.
+
+The selected workspace alone renders. Opening the boardroom does not train C13
+or load a large chart bundle. Native controls, visible keyboard focus, reduced
+motion, responsive layout and explicit recovery states support the main flow.
+
+## Quick start
+
+**Python 3.12** is the verified runtime. This is a Python application: there is no
+Node application build or `node_modules` requirement. Run commands from the
+repository root. A first dependency installation needs Internet access; the
+fictional boardroom and synthetic evaluations subsequently need no API key.
+
+### Windows PowerShell
 
 ```powershell
+git pull origin main
 py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-
-# All of these work without an LLM API key or market network:
-python -m pytest -q
-python -m challenge.c02_rare_event
-python -m challenge.c06_explainability
-python -m challenge.c13_cost_sensitive
-python -m data.feedback_backtest
-python -m orchestrator.graph
-streamlit run app.py
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt -c requirements-lock.txt
+.\.venv\Scripts\python.exe scripts/check.py
+.\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-Open `http://localhost:8501`. The default is **fictional demo mode**.
-You can convene the boardroom, inspect evidence and conflicts, run a
-**hypothetical** carbon-price shock, compare allocations, and visit the
-**Risk Lab** tab to show the PR curve and three SHAP figures.
+### Linux / macOS shell
 
-The Risk Lab also runs **C13 decision economics** on this machine. Its default
-scenario assumes $100 per audit and $10,000 per missed positive; these are
-illustrative assumptions, not measured losses. Change the costs and click
-**Optimize economic threshold** to recalculate. Export the JSON for the complete
-validation curve, fixed threshold and held-out policy comparisons. For PowerShell:
-
-```powershell
-.\.venv\Scripts\python.exe -m challenge.c13_cost_sensitive --audit-cost 100 --missed-loss 10000
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements-dev.txt -c requirements-lock.txt
+.venv/bin/python scripts/check.py
+.venv/bin/python -m streamlit run app.py
 ```
 
-`python -m orchestrator.graph` uses LangGraph after installing requirements;
-a *labeled* pure-Python execution path is available for isolated testing.
+Open `http://localhost:8501`. The initial fictional preview is not saved. Select
+**Review this mandate** to run LangGraph and create a tracked recommendation.
+Stop the server with Ctrl+C before restarting it after an update.
 
-### Real market mode (optional)
+`requirements-lock.txt` contains the versions exercised on Linux/Python 3.12;
+it is a constraints file, not a cross-platform artifact/hash guarantee. The CI
+matrix declares Windows and Ubuntu checks. See QA_REPORT.md for which checks
+were actually executed in this submission environment.
+
+## The four-minute walkthrough
+
+1. **The mandate.** Keep fictional mode, $100,000, moderate risk, strict ESG. Run the review. Show how allocation is accounted for, including cash.
+2. **The evidence.** Open the specialist evidence and decision room. Fictional FOSS demonstrates how a positive market signal can conflict with ESG policy.
+3. **The constraints.** Show excluded/restricted holdings, then select a hypothetical selloff and review again. Compare the actual calculated allocations. Export the complete audit.
+4. **The model.** Navigate to Risk Lab → Detection & explanations. Explain the 99:1 accuracy trap and inspect a true positive, false positive and false negative.
+5. **The economics.** Select Decision economics · C13. Explain the USD cost matrix, validation-loss minimum, frozen threshold, and held-out confusion matrix. Change missed-positive loss and rerun.
+
+The bundled C02/C06 snapshot is a clearly labeled synthetic example. Generate
+fresh reports to show results from your machine. C13 computes its own experiment
+when selected; it is separate from both the portfolio and the bundled snapshot.
+
+## Decision economics: C13
+
+![Actual C13 decision-economics interface](docs/screenshots/c13-results-desktop.png)
+
+The illustrative default scenario charges **$100 for every audit**, including
+true positives, and **$10,000 for each missed positive**. A successful audit is
+assumed to prevent the modeled loss fully.
+
+| Actual outcome | No audit | Audit |
+|---|---:|---:|
+| Negative | TN: $0 | FP: $100 |
+| Positive | FN: $10,000 | TP: $100 |
+
+`Total loss = (TP + FP) × audit cost + FN × missed-positive loss`
+
+An exact search over distinct **validation** score boundaries selects the lowest
+loss; equal scores stay together, and ties prefer fewer audits. The threshold is
+then frozen and evaluated on a separate test set. Audit-all, audit-none and the
+default zero threshold are compared on identical test cases. Negative held-out
+savings remain visible. Scores are anomaly scores, not probabilities.
+
+[Full C13 methodology and limitations](docs/C13_DECISION_ECONOMICS.md).
+
+## Historical prices and optional providers
+
+Download dated market data before selecting Historical market cache:
 
 ```powershell
-python -m data.fetch_market
-python -m data.carbon_forecast
+.\.venv\Scripts\python.exe -m data.fetch_market
+.\.venv\Scripts\python.exe -m data.carbon_forecast
 ```
 
-Market mode uses **dated locally cached prices** fetched by yfinance. It does
-not claim streaming live market feeds. The carbon price input `KRBN` is an ETF
-proxy, **not** the spot price of carbon allowances. If market data is missing,
-assets are excluded from investment and the optimizer safely retains cash.
+Return to the boardroom and run the review again. These commands use Yahoo
+Finance through yfinance. Clicking review reads the local cache; it does not
+refresh prices automatically. Missing/invalid prices receive zero exposure.
+KRBN is an ETF proxy, not a spot carbon-credit quote. Its trend projection is
+market context, not a direct optimizer input or a calibrated prediction.
 
-For issuer-scoped RAG, optionally install:
-
-```powershell
-python -m pip install -r requirements-rag.txt
-```
-
-Add PDFs as `data_cache/pdfs/TICKER__report.pdf` and then run:
+Optional issuer-report analysis:
 
 ```powershell
-python -m data.build_rag
-```
-
-A user-uploaded ESG report is not independently verified or certified. RAG
-retrieval returns filenames and **page citations**, filters by issuer, and does
-not assert a numeric ESG rating without valid analysis. Optional LLMs require:
-
-```powershell
-python -m pip install -r requirements-llm.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-rag.txt -r requirements-llm.txt
 Copy-Item .env.example .env
-# Add keys to .env locally. Never commit that file.
+# Enter optional credentials in .env locally, never in Git.
+# Place permitted PDFs in data_cache/pdfs/, e.g. NEE__2025_report.pdf.
+.\.venv\Scripts\python.exe -m data.build_rag
 ```
 
-Both `GEMINI_API_KEY` and `OPENROUTER_API_KEY` are optional. With no LLM,
-market-mode ESG classifications remain **unverified**, rather than producing
-false claims. The demo has **explicit synthetic fixture** assessments and never
-uses real issuer accusations.
+Indexing requires optional model downloads. Retrieval filters by issuer and
+preserves filename/page citations. Uploaded reports are **not independently
+authenticated**. An available document is not proof of its claims. Without
+usable evidence and a valid provider response, ESG remains unverified.
+Provider-backed RAG is not part of the verified offline demonstration.
+
+### Environment variables
+
+No `.env` file is required for the offline workflow. Process variables override
+`.env`; copy the complete [.env.example](.env.example) only when needed.
+
+| Variable | Default / purpose |
+|---|---|
+| `LLM_PROVIDER` | `auto`; optional `gemini` or `openrouter` |
+| `GEMINI_API_KEY` | Empty; optional credential |
+| `GEMINI_MODEL` | `gemini-2.5-flash` |
+| `OPENROUTER_API_KEY` | Empty; optional credential |
+| `OPENROUTER_MODEL` | `openrouter/free` |
+| `VERDANT_DATA_DIR` | `./data_cache`; generated caches and reports |
+| `VERDANT_RAG_DIR` | `./rag_db`; optional vector index |
+| `VERDANT_FEEDBACK_DB` | `<data directory>/feedback.db` |
+
+Relative data/index paths resolve from the project root. Documents, caches,
+provider responses, credentials and outcome databases stay out of source ZIPs.
 
 ## Architecture
 
-```text
-Investment mandate / ESG policy / event scenario
-                     │
-         LangGraph state + provenance
-                     │
-       ┌─────────────┴───────────────┐
-       ↓                             ↓
- ESG Verifier                  Carbon & Market Analyst
- Issuer-scoped RAG              Cached prices + KRBN proxy
- Company citations              Dated statistical signals
-       └─────────────┬───────────────┘
-                     ↓
-       Genuine ESG-risk vs upside conflict?
-                     ↓
-       Evidence review (bounded at 1 round)
-                     ↓
-             Portfolio Optimizer
-       SciPy constrained, long-only + CASH
-                     ↓
-      Deterministic validated allocation memo
-                     ↓
-       SQLite recommendation audit + evidence
-
-External evaluation path:
- Synthetic disclosure features → IsolationForest
-                             ├─ C02: held-out 99:1 PR testing
-                             └─ C06: SHAP on three test cases
-
-Outcome data (verified and dated only in market mode)
-                  → smoothed agent weights
-                  → next portfolio soft preferences
+```mermaid
+flowchart TD
+    A[Mandate and structured controls] --> B[ESG Verifier]
+    B --> C[Carbon and Market Analyst]
+    C --> D{Specified conflict?}
+    D -->|One bounded review| E[Evidence review]
+    E --> D
+    D -->|Proceed| F[SciPy Portfolio Optimizer]
+    F --> G[Deterministic memo and validation]
+    G --> H[SQLite audit and JSON export]
+    I[Synthetic Risk Lab] --> J[C02 Isolation Forest]
+    J --> K[C06 SHAP explanations]
+    I --> L[C13 validation-selected economic threshold]
 ```
 
-### Design rules
+LangGraph runs the specialists sequentially with conditional routing. These are
+three responsibilities, not three independently trained LLMs. Review, synthesis
+and persistence are deterministic steps, not additional investment agents.
 
-1. **Three specialists only.** Synthesis is deterministic, not a fourth agent.
-2. **The LLM cannot invent allocation weights.** SciPy enforces full funding,
-   max holdings, no shorts, ESG caps/exclusions, and cash fallback.
-3. **No ESG evidence ≠ greenwashing.** With no authenticated citation or
-   validated model response, classification is `unverified` and numerical ESG
-   scores are `null`.
-4. **No test leakage.** The C02 fit uses training observations without labels,
-   and the held-out evaluation is used for metrics and SHAP cases only.
-5. **Feedback provenance matters.** Synthetic feedback resides in a separate
-   SQLite file and does not count as verified market performance.
+The optimizer uses clipped annual historical means, regularized covariance,
+a risk penalty, ESG soft penalties, and hard position bounds. SLSQP calculates
+long-only weights summing to 100%. An LLM does not set the numerical allocation.
+The UI's historical return estimate is distinct from the ESG-adjusted objective.
+Cash defaults to zero modeled return and covariance; inflation and execution
+costs are not represented.
 
-## Reproduce the hackathon evidence
+### Important interpretation rules
 
-```powershell
-python -m challenge.c02_rare_event
-python -m challenge.c06_explainability
-python -m pytest -q
-```
+- Missing ESG evidence means **unverified**, not fraud or zero sustainability.
+- Strict mode caps unverified holdings at 10%; it does not require investing 10%.
+- XOM is not automatically excluded by sector. There is no blanket fossil-fuel policy.
+- Free-text principles are recorded; structured controls enforce policy. Arbitrary prose does not become an optimizer constraint.
+- Market confidence is a history-length heuristic, not a calibrated probability.
+- C02/C06/C13 features and outcomes are synthetic; they do not validate detection on real issuers.
+- SHAP explains the separate anomaly score, not allocation weights or causality.
+- Feedback weights use smoothed outcome records; synthetic history cannot influence market-mode weights. Automatic future-return matching is not implemented.
 
-Expected generated files (not committed by default):
+## Commands and project map
 
-- `data_cache/c02_report.json`
-- `data_cache/c02_pr_curve.json`
-- `data_cache/c06_report.json`
-- `data_cache/c13_report.json` (run `python -m challenge.c13_cost_sensitive`)
-- `data_cache/c06_plots/c06_case_1.png`, `c06_case_2.png`, `c06_case_3.png`
-- `data_cache/feedback_timeline.json`
+Use `.venv/bin/python` on Linux or `.\.venv\Scripts\python.exe` on Windows:
 
-The exact reported metrics are derived at runtime; **do not manually type
-favorable numbers into the dashboard**.
-
-## File map
-
-| Path | Responsibility |
+| Command suffix | Purpose |
 |---|---|
-| `app.py` | Redesigned four-section Streamlit investment workspace |
-| `orchestrator/graph.py` | LangGraph nodes, state channels, bounded review |
-| `agents/` | Source-bound prompts and optional LLM provider fallback |
-| `data/build_rag.py` | Issuer- and page-scoped PDF indexing and retrieval |
-| `data/fetch_market.py` | yfinance normalization and market provenance |
-| `data/carbon_forecast.py` | Dated KRBN ETF-proxy forecast and holdout |
-| `data/portfolio.py` | Constrained SciPy optimizer and policy audit |
-| `data/feedback_store.py` | SQLite audit and source-aware influence weights |
-| `data/feedback_backtest.py` | Clearly synthetic 30-day feedback example |
-| `challenge/c02_rare_event.py` | Reproducible rare-event performance evaluation |
-| `challenge/c06_explainability.py` | Three SHAP edge-case reports and plots |
-| `challenge/c13_cost_sensitive.py` | Validation-selected economic threshold and held-out cost audit |
-| `tests/` | Regression and acceptance tests |
-| `docs/` | Architecture, requirements mapping, evidence and limitations |
+| `scripts/check.py` | Dependency check, lint, format check, full tests, real UI smoke, compilation |
+| `-m challenge.c02_rare_event` | Five-seed rare-event evaluation |
+| `-m challenge.c06_explainability` | Three held-out SHAP explanations and PNGs |
+| `-m challenge.c13_cost_sensitive --audit-cost 100 --missed-loss 10000` | Financial matrix, threshold selection and held-out audit |
+| `-m data.feedback_backtest` | Separate, explicitly simulated influence timeline |
+| `-m orchestrator.graph` | Persist a fictional boardroom review |
+| `-m streamlit run app.py` | Start the local studio |
+| `tools/package_release.py` | ZIP of tracked source only |
 
-## Deployment and final review
+`scripts/prepare_demo.ps1` installs the constrained development dependencies,
+checks the project, generates all evidence, and starts the app. It stops on a
+failed native command.
 
-- Local: `streamlit run app.py`
-- Docker: `docker build -t verdant-capital .` then
-  `docker run -p 8501:8501 verdant-capital`
-- Jenkins pipeline and GitHub Actions example are included for automated tests.
-- **No AWS EC2, MongoDB Atlas, or real-time distributed event bus is claimed.**
-  They were aspirations in the original proposal, not implemented capabilities.
+| Directory | Responsibility |
+|---|---|
+| `app.py`, `ui/` | Workspace routing, presentation, chart grammar and design tokens |
+| `orchestrator/` | State, bounded review, deterministic memo |
+| `agents/` | Optional provider calls and source-aware ESG prompt |
+| `data/` | Price ingestion, allocation, reports, persistence, optional RAG |
+| `challenge/` | C02/C06/C13 evaluation and UI |
+| `tests/` | Behavioral, adversarial, economic and UI regressions |
+| `assets/benchmark_snapshot/` | Labeled reproducible C02/C06 sample evidence |
+| `docs/` | Actual screenshots, architecture, evidence contracts and limits |
 
-Before submitting, run all tests, verify the dashboard on your machine,
-inspect source citations, and record a short demo showing the three agents,
-conflict review, optimizer, Risk Lab and provenance labels.
+## Testing, accessibility and performance
 
-**Research prototype only.** Not investment, credit, or compliance advice.
+[QA_REPORT.md](QA_REPORT.md) records actual passes, failure injection, concurrency,
+browser coverage, automated accessibility and Lighthouse results, and remaining
+triage. [CHANGELOG.md](CHANGELOG.md) describes the final changes.
+
+The interface provides a dark theme, a skip link, named native controls, visible
+focus, text equivalents for allocation graphics, a real-work loading skeleton,
+and a reduced-motion override. Automated accessibility checks do not substitute
+for a complete manual WCAG AA certification.
+
+Optional browser tooling is separate from the Python app:
+
+```bash
+npm install --prefix .qa-tools playwright @axe-core/playwright lighthouse
+node tools/browser_qa.cjs
+```
+
+Install Playwright browsers separately or set `CHROME_PATH` to an available
+Chromium executable. `VERDANT_QA_URL` selects the running local server. Browser
+reports go to ignored `dist/browser-qa/`. Lighthouse needs a running server and
+an available Chrome executable. The QA report distinguishes framework limits
+from changes under this repository's control.
+
+## Deployment boundary
+
+The default server binds to **127.0.0.1** with XSRF/CORS protection enabled and
+telemetry disabled. This is a **single trusted operator workspace** with a shared
+local audit database, not a multi-tenant SaaS service. It has no account system,
+authorization layer or tenant isolation. Do not publish it directly to the
+Internet; use an authenticated reverse proxy and isolated storage for deployment.
+Never disable TLS verification to make an optional provider work.
+
+A Dockerfile and loopback-bound Compose example are included. On Linux, writable
+bind-mounted data/index directories must permit the container's UID 1000.
+The Docker image build and local browser review were verified here. Windows
+execution, real provider calls and non-Chromium browsers remain unverified where
+QA_REPORT.md marks them unrun.
+
+## Roadmap
+
+- Independently labeled issuer evidence and tested document-feature extraction.
+- Issuer/time-separated evaluation, calibrated uncertainty and cost sensitivity.
+- Transaction costs, liquidity, turnover and realistic portfolio backtesting.
+- Authenticated multi-user operation, tenant-scoped storage and retention policy.
+- Verified future outcomes before automated feedback adaptation.
+- Frontend delivery improvements beyond the current Streamlit framework limits.
+
+## Licensing and attribution
+
+**Licensing is explicitly pending**, as selected by the project owner. Public
+visibility does not grant a reuse license. See [LICENSE](LICENSE) and
+[NOTICE.md](NOTICE.md) before redistribution or commercial use. Original project
+attribution to Team Cypher and the upstream repository is retained in NOTICE.md.

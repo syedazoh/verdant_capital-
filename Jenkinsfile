@@ -1,11 +1,11 @@
 pipeline {
     agent any
     stages {
-        stage('Test') {
+        stage('Verify') {
             steps {
-                sh 'python -m pip install -r requirements.txt'
-                sh 'python -m pytest -q'
-                sh 'python -m compileall -q agents challenge data orchestrator app.py'
+                sh 'python -m pip install --upgrade pip'
+                sh 'python -m pip install -r requirements-dev.txt -c requirements-lock.txt'
+                sh 'python scripts/check.py'
             }
         }
     }

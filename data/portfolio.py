@@ -4,8 +4,11 @@ The LLM cannot edit these mathematically validated allocations. Missing ESG
 verification is restricted, confirmed high-risk ESG claims are excluded under
 strict mandates, and any infeasible investment remains in CASH.
 """
+
 from __future__ import annotations
+
 import math
+
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
@@ -17,18 +20,36 @@ RISK = {
 }
 
 
-def optimize(candidates, prices: pd.DataFrame, esg: dict, risk_profile: str = "moderate",
-             strict_esg: bool = True, annual_cash_return: float = 0.0,
-             influence: dict | None = None) -> dict:
+def optimize(
+    candidates,
+    prices: pd.DataFrame,
+    esg: dict,
+    risk_profile: str = "moderate",
+    strict_esg: bool = True,
+    annual_cash_return: float = 0.0,
+    influence: dict | None = None,
+) -> dict:
     candidates = list(dict.fromkeys(str(t).upper().strip() for t in candidates if str(t).strip()))
+    if "CASH" in candidates:
+        raise ValueError("CASH is reserved for unallocated capital")
+    if risk_profile not in RISK:
+        raise ValueError("Unknown risk profile")
+    if not math.isfinite(float(annual_cash_return)):
+        raise ValueError("Cash return must be finite")
     policy = RISK.get(risk_profile, RISK["moderate"])
     influence = influence or {}
+    if any(
+        not math.isfinite(float(influence.get(name, 1.0)))
+        for name in ("market_analyst", "esg_verifier")
+    ):
+        raise ValueError("Agent influence must be finite")
     market_influence = float(np.clip(influence.get("market_analyst", 1.0), 0.5, 1.5))
     esg_influence = float(np.clip(influence.get("esg_verifier", 1.0), 0.5, 1.5))
     applied_influence = {"esg_verifier": esg_influence, "market_analyst": market_influence}
     prices = prices.copy() if isinstance(prices, pd.DataFrame) else pd.DataFrame()
     if not prices.empty:
         prices.columns = [str(k).upper() for k in prices.columns]
+        prices = prices.loc[:, ~prices.columns.duplicated(keep=False)]
     caps = {}
     for ticker in candidates:
         info = esg.get(ticker, {})
@@ -45,7 +66,7 @@ def optimize(candidates, prices: pd.DataFrame, esg: dict, risk_profile: str = "m
     for ticker in candidates:
         if ticker in prices.columns:
             series = pd.to_numeric(prices[ticker], errors="coerce").dropna()
-            if len(series) >= 45 and series.gt(0).all():
+            if len(series) >= 45 and series.gt(0).all() and np.isfinite(series).all():
                 reliable.append(ticker)
             else:
                 caps[ticker] = 0.0
@@ -56,28 +77,47 @@ def optimize(candidates, prices: pd.DataFrame, esg: dict, risk_profile: str = "m
     weights["CASH"] = 1.0
     note = "No eligible assets with sufficiently complete prices; allocation held in cash."
     if not assets:
-        return {"weights": weights, "status": "cash_only", "reason": note,
-                "expected_return_pct": 0.0, "volatility_pct": 0.0,
-                "esg_caps": caps, "optimizer": "SciPy SLSQP", "influence_used": applied_influence}
+        return {
+            "weights": weights,
+            "status": "cash_only",
+            "reason": note,
+            "expected_return_pct": 0.0,
+            "volatility_pct": 0.0,
+            "esg_caps": caps,
+            "optimizer": "SciPy SLSQP",
+            "influence_used": applied_influence,
+        }
 
     hist = prices[assets].apply(pd.to_numeric, errors="coerce").dropna()
-    returns = hist.pct_change().replace([np.inf, -np.inf], np.nan).dropna()
+    returns = hist.pct_change(fill_method=None).replace([np.inf, -np.inf], np.nan).dropna()
     if len(returns) < 30:
-        return {"weights": weights, "status": "cash_only", "reason": "Insufficient common history.",
-                "expected_return_pct": 0.0, "volatility_pct": 0.0,
-                "esg_caps": caps, "optimizer": "SciPy SLSQP", "influence_used": applied_influence}
+        return {
+            "weights": weights,
+            "status": "cash_only",
+            "reason": "Insufficient common history.",
+            "expected_return_pct": 0.0,
+            "volatility_pct": 0.0,
+            "esg_caps": caps,
+            "optimizer": "SciPy SLSQP",
+            "influence_used": applied_influence,
+        }
     # Winsorize runaway estimates, shrink covariance toward diagonal and regularize.
     mu = np.clip(returns.mean().to_numpy() * 252, -0.3, 0.3)
+    historical_mu = np.append(mu.copy(), annual_cash_return)
     raw_cov = returns.cov().to_numpy() * 252
     covariance = 0.8 * raw_cov + 0.2 * np.diag(np.diag(raw_cov))
     covariance += np.eye(len(assets)) * 1e-5
     # Performance feedback changes a SOFT preference, never a hard ESG exclusion.
     # Separate simulated labels from verified outcomes at the feedback-store boundary.
     mu = mu * market_influence
-    soft_esg_penalty = np.array([
-        (max(0.0, 65.0 - float(esg.get(t, {}).get("esg_credibility") or 0)) / 100.0)
-        * 0.06 * esg_influence for t in assets
-    ])
+    soft_esg_penalty = np.array(
+        [
+            (max(0.0, 65.0 - float(esg.get(t, {}).get("esg_credibility") or 0)) / 100.0)
+            * 0.06
+            * esg_influence
+            for t in assets
+        ]
+    )
     mu = np.append(mu - soft_esg_penalty, annual_cash_return)
     covariance = np.pad(covariance, ((0, 1), (0, 1)), constant_values=0)
     n = len(assets)
@@ -88,9 +128,14 @@ def optimize(candidates, prices: pd.DataFrame, esg: dict, risk_profile: str = "m
     def loss(w):
         return float(policy["penalty"] * (w @ covariance @ w) / 2.0 - mu @ w)
 
-    result = minimize(loss, x0, method="SLSQP", bounds=bounds,
-                      constraints=[{"type": "eq", "fun": lambda w: float(w.sum() - 1)}],
-                      options={"maxiter": 500, "ftol": 1e-10})
+    result = minimize(
+        loss,
+        x0,
+        method="SLSQP",
+        bounds=bounds,
+        constraints=[{"type": "eq", "fun": lambda w: float(w.sum() - 1)}],
+        options={"maxiter": 500, "ftol": 1e-10},
+    )
     if result.success and np.all(np.isfinite(result.x)):
         w = np.clip(result.x, 0.0, 1.0)
         if abs(sum(w) - 1) < 1e-5 and all(w[j] <= bounds[j][1] + 1e-6 for j in range(len(w))):
@@ -107,7 +152,14 @@ def optimize(candidates, prices: pd.DataFrame, esg: dict, risk_profile: str = "m
     weights["CASH"] = max(0.0, 1.0 - sum(weights[t] for t in candidates))
     selection = np.array([weights[t] for t in assets] + [weights["CASH"]])
     variance = max(float(selection @ covariance @ selection), 0.0)
-    return {"weights": weights, "status": "optimized" if "Long-only" in note else "cash_only",
-            "reason": note, "expected_return_pct": round(float(mu @ selection) * 100, 2),
-            "volatility_pct": round(math.sqrt(variance) * 100, 2),
-            "esg_caps": caps, "optimizer": "SciPy SLSQP", "influence_used": applied_influence}
+    return {
+        "weights": weights,
+        "status": "optimized" if "Long-only" in note else "cash_only",
+        "reason": note,
+        "expected_return_pct": round(float(historical_mu @ selection) * 100, 2),
+        "adjusted_return_pct": round(float(mu @ selection) * 100, 2),
+        "volatility_pct": round(math.sqrt(variance) * 100, 2),
+        "esg_caps": caps,
+        "optimizer": "SciPy SLSQP",
+        "influence_used": applied_influence,
+    }

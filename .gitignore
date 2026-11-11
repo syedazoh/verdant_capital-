@@ -16,3 +16,8 @@ data_cache/
 .idea/
 .vscode/
 *.log
+dist/
+.qa-tools/
+.ruff_cache/
+.coverage
+htmlcov/

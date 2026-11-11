@@ -1,10 +1,13 @@
 """Market price ingestion, controlled real/synthetic data provenance."""
-import json
+
 from pathlib import Path
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+
 import config
 from data.demo import price_frame
+from data.files import write_json, write_text
 
 
 def normalize_download(data, tickers):
@@ -35,9 +38,11 @@ def normalize_download(data, tickers):
 
 def fetch(tickers, period="1y"):
     import yfinance as yf
+
     tickers = list(dict.fromkeys(t.upper() for t in tickers))
-    data = yf.download(tickers, period=period, auto_adjust=True,
-                       progress=False, group_by="column", threads=False)
+    data = yf.download(
+        tickers, period=period, auto_adjust=True, progress=False, group_by="column", threads=False
+    )
     return normalize_download(data, tickers)
 
 
@@ -47,15 +52,25 @@ def price_stats(frame: pd.DataFrame) -> dict:
         s = pd.to_numeric(frame[ticker], errors="coerce").dropna()
         if len(s) < 3 or not s.gt(0).all():
             continue
-        returns = s.pct_change().dropna()
-        trend = "insufficient_history" if len(s) < 90 else ("up" if s.iloc[-1] > s.iloc[-90] else "down")
+        if not np.isfinite(s).all():
+            continue
+        returns = s.pct_change(fill_method=None).dropna()
+        trend = (
+            "insufficient_history"
+            if len(s) < 91
+            else ("up" if s.iloc[-1] > s.iloc[-91] else "down")
+        )
         out[str(ticker)] = {
             "last": round(float(s.iloc[-1]), 4),
-            "return_30d_pct": (round(float((s.iloc[-1] / s.iloc[-30] - 1) * 100), 3)
-                               if len(s) >= 30 else None),
-            "vol_annual_pct": round(float(returns.std() * (252 ** .5) * 100), 3),
-            "trend_90d": trend, "observations": int(len(s)),
-            "as_of": str(pd.Timestamp(s.index[-1]).date()) if hasattr(s.index[-1], "date") else str(s.index[-1]),
+            "return_30d_pct": (
+                round(float((s.iloc[-1] / s.iloc[-31] - 1) * 100), 3) if len(s) >= 31 else None
+            ),
+            "vol_annual_pct": round(float(returns.std() * (252**0.5) * 100), 3),
+            "trend_90d": trend,
+            "observations": int(len(s)),
+            "as_of": str(pd.Timestamp(s.index[-1]).date())
+            if hasattr(s.index[-1], "date")
+            else str(s.index[-1]),
         }
     return out
 
@@ -64,16 +79,26 @@ def load_cached_prices():
     path = Path(config.DATA_DIR) / "prices.csv"
     if not path.exists():
         return pd.DataFrame()
-    frame = pd.read_csv(path, index_col=0, parse_dates=True)
+    try:
+        frame = pd.read_csv(path, index_col=0)
+    except (OSError, ValueError, pd.errors.ParserError):
+        return pd.DataFrame()
     # Backward compatibility if a user saved yfinance's two-row header CSV.
     if "Ticker" in frame.index.astype(str) or "Date" in frame.index.astype(str):
         try:
             frame = pd.read_csv(path, header=[0, 1], index_col=0, parse_dates=True)
-            frame = normalize_download(frame, list(config.DEFAULT_CANDIDATES) + [config.CARBON_TICKER])
+            frame = normalize_download(
+                frame, list(config.DEFAULT_CANDIDATES) + [config.CARBON_TICKER]
+            )
         except (ValueError, KeyError):
             return pd.DataFrame()
+    frame.index = pd.to_datetime(frame.index, errors="coerce", utc=True)
+    frame = frame.loc[frame.index.notna()]
+    frame = frame.loc[~frame.index.duplicated(keep="last")]
     frame.columns = [str(t).upper() for t in frame.columns]
-    return frame.apply(pd.to_numeric, errors="coerce").sort_index()
+    return (
+        frame.apply(pd.to_numeric, errors="coerce").replace([np.inf, -np.inf], np.nan).sort_index()
+    )
 
 
 def main(mode="market"):
@@ -87,14 +112,17 @@ def main(mode="market"):
     dest = Path(config.DATA_DIR)
     dest.mkdir(parents=True, exist_ok=True)
     filename = "demo_prices.csv" if mode == "demo" else "prices.csv"
-    prices.to_csv(dest / filename)
-    (dest / ("demo_price_stats.json" if mode == "demo" else "price_stats.json")).write_text(
-        json.dumps({"mode": mode, "source": source, "tickers": price_stats(prices)}, indent=2),
-        encoding="utf-8")
+    write_text(dest / filename, prices.to_csv())
+    write_json(
+        dest / ("demo_price_stats.json" if mode == "demo" else "price_stats.json"),
+        {"mode": mode, "source": source, "tickers": price_stats(prices)},
+    )
     print(f"Saved {filename} ({len(prices)} observations), {source}")
+
 
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["market", "demo"], default="market")
     main(parser.parse_args().mode)

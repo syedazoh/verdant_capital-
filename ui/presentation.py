@@ -1,4 +1,5 @@
 """View-model and safe presentation helpers; never change investment decisions."""
+
 from __future__ import annotations
 
 from html import escape
@@ -30,6 +31,22 @@ def clean_portfolio(rows: list[dict]) -> list[dict]:
         entry["weight"] = 0.0 if abs(weight) < 1e-8 else weight
         result.append(entry)
     return result
+
+
+def allocation_strip(rows: list[dict]) -> str:
+    """Lightweight allocation graphic; the accompanying ledger supplies exact values."""
+    colors = ["#a4e8bf", "#efd2a2", "#9dbcd3", "#d4a3ce", "#b5c6bc", "#90aaa4"]
+    rows = [row for row in clean_portfolio(rows) if row["weight"] > 0]
+    if not rows:
+        return '<p class="vc-note">No allocation is available.</p>'
+    description = ", ".join(f"{row['ticker']} {percent(row['weight'])}" for row in rows)
+    segments = "".join(
+        f'<span style="flex-grow:{row["weight"]:.12f};background:{colors[i % len(colors)]}"></span>'
+        for i, row in enumerate(rows)
+    )
+    return (
+        f'<div class="vc-allocation" role="img" aria-label="{safe(description)}">{segments}</div>'
+    )
 
 
 def get_dashboard_metrics(result: dict) -> dict[str, Any]:
@@ -67,43 +84,52 @@ def chip(text: str, kind: str = "neutral") -> str:
 def section(title: str, detail: str = "", aside: str = "") -> str:
     subtitle = f'<p class="vc-section-desc">{safe(detail)}</p>' if detail else ""
     aside_html = f'<span class="vc-section-aside">{safe(aside)}</span>' if aside else ""
-    return (f'<div class="vc-section-top"><div><h2>{safe(title)}</h2>{subtitle}</div>'
-            f'{aside_html}</div>')
+    return (
+        f'<div class="vc-section-top"><div><h2>{safe(title)}</h2>{subtitle}</div>{aside_html}</div>'
+    )
 
 
 def stat(label: str, value: str, note: str = "", tone: str = "") -> str:
-    note_html = f'<div class="vc-stat-note">{safe(note)}</div>' if note else ''
+    note_html = f'<div class="vc-stat-note">{safe(note)}</div>' if note else ""
     tone_name = tone if tone in {"green", "gold", "red"} else ""
-    return (f'<div class="vc-stat"><div class="vc-stat-label">{safe(label)}</div>'
-            f'<div class="vc-stat-value {"vc-" + tone_name if tone_name else ""}">{safe(value)}</div>'
-            f'{note_html}</div>')
+    return (
+        f'<div class="vc-stat"><div class="vc-stat-label">{safe(label)}</div>'
+        f'<div class="vc-stat-value {"vc-" + tone_name if tone_name else ""}">{safe(value)}</div>'
+        f"{note_html}</div>"
+    )
 
 
 def hero(*, mode: str, preview: bool, last_run: str = "") -> str:
     demonstration = mode == "demo"
     provenance = "Fictional simulation" if demonstration else "Historical market cache"
-    status = "Preview · not saved" if preview else ("Analysis complete" if last_run else "Ready for analysis")
-    return f'''<section class="vc-hero" aria-label="Verdant Capital workspace introduction">
+    status = (
+        "Preview · not saved"
+        if preview
+        else ("Analysis complete" if last_run else "Ready for analysis")
+    )
+    return f"""<section class="vc-hero" aria-label="Decision intelligence workspace">
       <div class="vc-hero-main">
-        <div class="vc-hero-topline"><span class="vc-presence"><i></i> Verdant intelligence</span><span class="vc-hero-rule"></span><span>{safe(provenance)}</span></div>
-        <h1>Capital decisions,<br><em>made accountable.</em></h1>
-        <p>Three specialists. One evidence-led investment mandate. Every allocation traced back to the signal that shaped it.</p>
-        <div class="vc-hero-tags">{chip(status, 'positive' if not preview and last_run else 'info')}{chip('C02 · Rare-event stress')}{chip('C06 · Explainability')}</div>
+        <h1>Conviction,<br><em>with a paper trail.</em></h1>
+        <p>Bring evidence to the table. Put your mandate through three specialist
+        perspectives, explicit constraints, and a decision you can inspect.</p>
+        <div class="vc-hero-tags">{chip(provenance, "info")}{chip(status, "positive" if not preview and last_run else "neutral")}</div>
       </div>
       <div class="vc-hero-aside">
-        <div class="vc-aside-heading">Decision framework <span>03 SPECIALISTS</span></div>
-        <div class="vc-aside-row"><span class="vc-aside-index">A</span><span>Verify sustainability</span><b>ESG</b></div>
-        <div class="vc-aside-row"><span class="vc-aside-index">B</span><span>Read the market</span><b>RISK</b></div>
-        <div class="vc-aside-row"><span class="vc-aside-index">C</span><span>Constrain allocation</span><b>OPT</b></div>
-        <div class="vc-aside-foot">No automated trading. No unsupported certainty.</div>
+        <div class="vc-aside-heading">From evidence to allocation</div>
+        <div class="vc-aside-row"><span>01</span><div><strong>Question the claim</strong><small>Issuer evidence &amp; ESG uncertainty</small></div></div>
+        <div class="vc-aside-row"><span>02</span><div><strong>Understand the exposure</strong><small>Dated prices &amp; historical risk</small></div></div>
+        <div class="vc-aside-row"><span>03</span><div><strong>Account for the decision</strong><small>Constrained weights &amp; an audit record</small></div></div>
+        <div class="vc-aside-foot">A research workspace. No trades are placed.</div>
       </div>
-    </section>'''
+    </section>"""
 
 
 def agent_header(title: str, subtitle: str, letter: str, status: str = "Operational") -> str:
-    return (f'<div class="vc-agent-head"><div class="vc-agent-identity"><span class="vc-agent-symbol">{safe(letter)}</span>'
-            f'<div><div class="vc-agent-name">{safe(title)}</div><div class="vc-agent-sub">{safe(subtitle)}</div></div></div>'
-            f'<span class="vc-mini-status">{safe(status)}</span></div>')
+    return (
+        f'<div class="vc-agent-head"><div class="vc-agent-identity"><span class="vc-agent-symbol">{safe(letter)}</span>'
+        f'<div><div class="vc-agent-name">{safe(title)}</div><div class="vc-agent-sub">{safe(subtitle)}</div></div></div>'
+        f'<span class="vc-mini-status">{safe(status)}</span></div>'
+    )
 
 
 def decision_reason(reason: str) -> tuple[str, str]:
@@ -113,5 +139,7 @@ def decision_reason(reason: str) -> tuple[str, str]:
         "EXCLUDED_HIGH_ESG_RISK": ("Excluded", "negative"),
         "LIMITED_UNVERIFIED_ESG": ("Restricted", "warning"),
         "CASH_SAFETY_RESERVE": ("Cash reserve", "info"),
+        "EXCLUDED_MISSING_PRICE_HISTORY": ("Missing prices", "warning"),
+        "ZERO_OPTIMAL_WEIGHT": ("Not selected", "neutral"),
     }
     return mapping.get(str(reason), ("Review required", "neutral"))

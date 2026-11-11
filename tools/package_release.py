@@ -1,31 +1,31 @@
-"""Create a sanitized full source ZIP for human review; never modifies Git."""
+"""Package tracked source only. Commit intended files before building the release."""
+
+import subprocess
 from pathlib import Path
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZIP_DEFLATED, ZipFile
 
 SOURCE = Path(__file__).resolve().parents[1]
-DIST = SOURCE / "dist"
-OUTPUT = DIST / "Verdant-Capital-Studio-UI-v2.zip"
-EXCLUDE_DIRS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache",
-                "data_cache", "rag_db", "dist", ".verdant_patch_backup"}
+OUTPUT = SOURCE / "dist" / "Verdant-Capital-Submission.zip"
 
 
 def package():
-    DIST.mkdir(exist_ok=True)
+    files = subprocess.check_output(["git", "ls-files", "-z"], cwd=SOURCE).decode().split("\0")
+    OUTPUT.parent.mkdir(exist_ok=True)
     count = 0
     with ZipFile(OUTPUT, "w", ZIP_DEFLATED, compresslevel=7) as archive:
-        for file in SOURCE.rglob("*"):
-            if not file.is_file():
+        for name in sorted(filter(None, files)):
+            file = SOURCE / name
+            if file.is_symlink() or not file.is_file():
                 continue
-            rel = file.relative_to(SOURCE)
-            if any(part in EXCLUDE_DIRS for part in rel.parts):
+            if file.name.lower().startswith(".env") and file.name != ".env.example":
                 continue
-            if file.name == ".env" or file.suffix in {".db", ".sqlite", ".pyc"}:
+            if file.suffix.lower() in {".db", ".sqlite", ".sqlite3", ".pyc", ".log"}:
                 continue
-            if file.name.endswith(".log"):
-                continue
-            archive.write(file, Path(SOURCE.name) / rel)
+            archive.write(file, Path("Verdant-Capital") / name)
             count += 1
-    print(f"Created {OUTPUT} with {count} source files")
+    print(
+        f"Created {OUTPUT.name}: {count} tracked source files; local caches, secrets and Git metadata excluded"
+    )
     return OUTPUT
 
 

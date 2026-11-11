@@ -2,14 +2,19 @@
 
 No real company or instrument is assessed or accused by these fixtures.
 """
+
 import hashlib
+
 import numpy as np
 import pandas as pd
 
 REPORTS = {
     "SOLR": {
-        "issuer": "Solara Works (fictional)", "credibility": 84, "risk": 16,
-        "verdict": "credible", "confidence": 0.86,
+        "issuer": "Solara Works (fictional)",
+        "credibility": 84,
+        "risk": 16,
+        "verdict": "credible",
+        "confidence": 0.86,
         "evidence": [
             "Synthetic disclosure: operational emissions declined 18% against a stated 2021 baseline.",
             "Synthetic disclosure: electricity procurement documentation includes a third-party assurance summary.",
@@ -17,14 +22,22 @@ REPORTS = {
         "flags": [],
     },
     "WIND": {
-        "issuer": "Windward Grid (fictional)", "credibility": None, "risk": None,
-        "verdict": "unverified", "confidence": 0.2,
-        "evidence": ["Synthetic disclosure: target lacks an independently verified emissions baseline."],
+        "issuer": "Windward Grid (fictional)",
+        "credibility": None,
+        "risk": None,
+        "verdict": "unverified",
+        "confidence": 0.2,
+        "evidence": [
+            "Synthetic disclosure: target lacks an independently verified emissions baseline."
+        ],
         "flags": ["Missing independent verification; classification remains unverified."],
     },
     "FOSS": {
-        "issuer": "Fossilix Energy (fictional)", "credibility": 24, "risk": 86,
-        "verdict": "likely_greenwashing", "confidence": 0.81,
+        "issuer": "Fossilix Energy (fictional)",
+        "credibility": 24,
+        "risk": 86,
+        "verdict": "likely_greenwashing",
+        "confidence": 0.81,
         "evidence": [
             "Synthetic disclosure: net-zero commitment gives no reference-year baseline.",
             "Synthetic disclosure: planned capital expenditure is not tied to the stated target.",
@@ -39,16 +52,24 @@ def evidence(ticker: str):
     if not p:
         return []
     return [
-        {"ticker": ticker, "source": f"SYNTHETIC_FIXTURE_{ticker}.txt", "page": 1,
-         "text": text, "mode": "synthetic", "issuer": p["issuer"],
-         "citation": f"[SYNTHETIC_FIXTURE_{ticker}.txt p.1]"}
+        {
+            "ticker": ticker,
+            "source": f"SYNTHETIC_FIXTURE_{ticker}.txt",
+            "page": 1,
+            "text": text,
+            "mode": "synthetic",
+            "issuer": p["issuer"],
+            "citation": f"[SYNTHETIC_FIXTURE_{ticker}.txt p.1]",
+        }
         for text in p["evidence"]
     ]
 
 
 def price_frame(tickers=None, periods: int = 260, event: str = "baseline") -> pd.DataFrame:
     """Stable per-asset random seeds ensure reproducible history in all UI paths."""
-    tickers = list(tickers or REPORTS)
+    tickers = list(REPORTS if tickers is None else tickers)
+    if not isinstance(periods, int) or periods < 1:
+        raise ValueError("Periods must be a positive integer")
     prices = {}
     for t in tickers:
         seed = int.from_bytes(hashlib.sha256(t.encode()).digest()[:4], "big")

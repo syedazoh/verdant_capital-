@@ -15,18 +15,3 @@ Return STRICT JSON with keys:
 The scores are analyst estimates, not certified ESG ratings. For any unverified
 claims, be cautious. Quote no more than brief snippets from the supplied evidence.
 """
-
-MARKET_ANALYST_PROMPT = """You are the Carbon & Market Analyst in the Verdant boardroom.
-Use the dated market statistics and carbon-ETF proxy only. Never invent prices,
-news, correlations or forecast accuracy. A carbon ETF is NOT a carbon spot price.
-Return STRICT JSON with ticker, market_view (bullish|neutral|bearish),
-carbon_outlook (rising|stable|falling|unavailable), reasoning,
-confidence between 0 and 1, and evidence list.
-"""
-
-DEBATE_PROMPT = """You are preparing a short structured evidence review, NOT a fourth
-investment agent. Summarize the ESG risk and market opportunity, which claim each
-supports, and how the portfolio's hard ESG constraints settle the disagreement.
-Do not override any numeric optimizer output. Return STRICT JSON containing
-esg_case, market_case, resolution, residual_uncertainty.
-"""

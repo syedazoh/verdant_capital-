@@ -11,4 +11,3 @@ yfinance>=0.2.40,<2
 pypdf>=4,<7
 shap>=0.45,<1
 matplotlib>=3.8,<4
-pytest>=8,<10

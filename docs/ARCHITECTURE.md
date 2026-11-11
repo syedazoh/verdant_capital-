@@ -72,7 +72,19 @@ for demonstration and clearly marked.
 
 ## User experience
 
-The Streamlit app has Boardroom, Risk Lab, Market & Memory, and Audit tabs.
+The Streamlit app has Boardroom, Risk Lab, Market & Memory, and Audit views.
 It defaults to an offline fictional demo so the presentation works without
 an API key. A banner identifies synthetic market/ESG data. Risk Lab shows
 PR-AUC/AP and C06 plots directly from generated reports.
+
+## Decision economics and operational boundary
+
+C13 uses the C02 generator/model specification with separate train, validation
+and test splits. Only validation labels choose the threshold; a fixed policy
+is evaluated on test cases. Costs and savings are illustrative, not issuer losses.
+
+Only the selected Streamlit workspace executes. The application is a trusted
+local single-operator tool: it has no account authentication or tenant isolation.
+The loopback server and XSRF/CORS defaults are not substitutes for an authenticated
+reverse proxy in a deployment. Reports are atomically replaced; SQLite migrations
+and writes use serialized transactions. See QA_REPORT.md for verified coverage.
