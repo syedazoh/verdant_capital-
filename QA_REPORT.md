@@ -162,3 +162,19 @@ findings. Bundled SHAP plots were recolored only after verifying their recorded
 case data exactly matched the fresh run. Runtime screenshots were refreshed.
 Lighthouse was not rerun for this palette update; the measurements above remain
 the prior submission audit's results.
+
+## Windows CI follow-up — 2026-11-12
+
+The user supplied Windows CI evidence showing 50 passed tests and a failure in
+concurrent atomic report writes. The former writer attempted replacement only
+once. Writes are now serialized within the process, with up to eight attempts
+for Windows access/sharing/locking errors (codes 5, 32, 33; at most 1.27 seconds
+of backoff). Unrelated errors propagate immediately; permanent failures preserve
+the previous report and clean up temporary output.
+
+All 56 tests, lint/format checks, compilation and actual UI smoke checks passed
+locally after the change. Five new injected-error cases reproduce the Windows
+failure mode and verify recovery/failure semantics. The original parallel test
+and Windows CI matrix remain enabled. The full Windows error code was absent
+from the pasted excerpt, and the GitHub API denied log access; the next Windows
+CI run must confirm the fix on that platform. No Windows pass is claimed here.

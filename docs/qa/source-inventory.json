@@ -36,9 +36,9 @@
   },
   {
     "path": "CHANGELOG.md",
-    "bytes": 2149,
-    "sha256": "0fec51a16aec4584680208b66b71bf498a281442467027d036eeb9209889f1df",
-    "lines": 35,
+    "bytes": 2486,
+    "sha256": "a528a514c98a87545bf3dbe63ad41990d560eea93d6e35afe839a0e928b96abe",
+    "lines": 41,
     "kind": "text"
   },
   {
@@ -78,9 +78,9 @@
   },
   {
     "path": "QA_REPORT.md",
-    "bytes": 12516,
-    "sha256": "aa0cf5c6bab3d6097c4e26503ce3847eefa4d9fd23d63ce29d5b71fbc8d83531",
-    "lines": 164,
+    "bytes": 13479,
+    "sha256": "6e0f438b7f0aa022d12aa797dedd84045720f5ee29cee10b7d6c7413d1fb8f6b",
+    "lines": 180,
     "kind": "text"
   },
   {
@@ -250,9 +250,9 @@
   },
   {
     "path": "data/files.py",
-    "bytes": 702,
-    "sha256": "170fa0c5316d767fee7aa8336e7d1af67382306a64184ce24211675b82049d3b",
-    "lines": 24,
+    "bytes": 1404,
+    "sha256": "f02c3ea061d81d52d018c8ef8de82240af2c17792170edffb5f7024746fb1bd2",
+    "lines": 41,
     "kind": "text"
   },
   {
@@ -489,6 +489,13 @@
     "bytes": 5529,
     "sha256": "ec40958a97942b29cda56e45957c079e15ff89d6375ff3145369fc22a076b4a2",
     "lines": 165,
+    "kind": "text"
+  },
+  {
+    "path": "tests/test_atomic_files.py",
+    "bytes": 2025,
+    "sha256": "f529440c0a7293f8da04541379413df7b50442903209c810858c2c2af43e0f78",
+    "lines": 56,
     "kind": "text"
   },
   {

@@ -1,5 +1,11 @@
 # Changelog
 
+## Windows report-write fix — 2026-11-12
+
+- Serialize in-process report writes and retry bounded Windows access/sharing violations during atomic replacement.
+- Preserve the previous report and propagate permanent failures.
+- Added transient/permanent-error regressions; retained the original concurrent-write test and Windows CI job.
+
 ## Palette update — 2026-11-12
 
 - Changed the studio to charcoal surfaces, warm ivory text and gold accents.
