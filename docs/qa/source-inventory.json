@@ -340,8 +340,8 @@
   },
   {
     "path": "docs/Verdant_Capital_Submission_Report.html",
-    "bytes": 2155203,
-    "sha256": "230a5ef544b2f7c4bda353f3aee4f71f54dc4060542d0a0d3afdc73476963f34",
+    "bytes": 2155174,
+    "sha256": "00ed378a187d4b45d90fa1ce1ba73f0fa5dd86147c39f88f31e86c4a8f606c49",
     "lines": 1649,
     "kind": "text"
   },
@@ -449,8 +449,8 @@
   },
   {
     "path": "docs/report_assets/c13_validation_curve.csv",
-    "bytes": 224800,
-    "sha256": "b69e7674b19f4ab5f7b5790184664e170ac897e6fdce40f338ac68699ccff194",
+    "bytes": 219798,
+    "sha256": "66dc0f8477563f8988ead0ef2146f2703a129775b3e396f0b641297b499b90bb",
     "lines": 5002,
     "kind": "text"
   },
