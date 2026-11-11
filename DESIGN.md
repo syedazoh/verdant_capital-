@@ -4,21 +4,21 @@
 A decision-support workspace where judges and analysts can inspect the evidence, model limits and portfolio constraints behind an investment simulation. The system does not execute trades and makes no claims of real-world fraud detection.
 
 ## Visual direction
-**Editorial decision studio.** A dark, slate-toned operational workspace with restrained mint accents, warm sand for reservations, and coral for risks. Dense technical evidence is presented as a readable editorial finance report, never as a wall of model JSON.
+**Editorial decision studio.** A dark, charcoal-toned operational workspace with restrained gold accents, warm sand for reservations, and coral for risks. Dense technical evidence is presented as a readable editorial finance report, never as a wall of model JSON.
 
 ### Tokens
 
 | Role | Color | Purpose |
 |---|---|---|
-| Canvas | `#0B1416` | Main app background |
-| Sidebar | `#101B23` | Controls and configuration |
-| Panel | `#16272B` | Important data grouping |
-| Main text | `#F0F5EE` | Primary information |
-| Secondary text | `#BACCC3` | Supporting details |
-| Accent | `#A4E8BF` | Interactive actions and selected state |
-| Reserve | `#E9C38D` | Cash reserves, cautions |
-| Risk | `#F0A8A8` | Suspicion-raising feature attribution |
-| Divider | `rgba(197,222,211,.13)` | Structural separation |
+| Canvas | `#171819` | Main app background |
+| Sidebar | `#1C1E20` | Controls and configuration |
+| Panel | `#282A2C` | Important data grouping |
+| Main text | `#F5F1E7` | Primary information |
+| Secondary text | `#CBC7BE` | Supporting details |
+| Accent | `#E3BE72` | Interactive actions and selected state |
+| Reserve | `#F1E5C9` | Cash reserves, cautions |
+| Risk | `#F2AAA0` | Suspicion-raising feature attribution |
+| Divider | `#45484B` | Structural separation |
 
 - Display: Georgia / Cambria / serif. UI: Segoe UI / system sans. No remote font is required.
 - Corner radius: 9–16px, based on control vs panel.

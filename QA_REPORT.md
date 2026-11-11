@@ -153,3 +153,12 @@ caches, PDFs, provider caches, SQLite state, temporary QA tools and installed
 virtual environments are excluded. The archive contains the updated README,
 QA report, changelog, environment template, source, tests, configs, attribution and
 actual screenshots. GitHub `main` is the source of truth after the final push.
+
+## Palette verification — 2026-11-12
+
+The charcoal/gold color-only update passed all 51 tests and Ruff checks. The
+four-viewport Chromium matrix passed again with zero automated accessibility
+findings. Bundled SHAP plots were recolored only after verifying their recorded
+case data exactly matched the fresh run. Runtime screenshots were refreshed.
+Lighthouse was not rerun for this palette update; the measurements above remain
+the prior submission audit's results.

@@ -82,31 +82,31 @@ def explain_cases(trial, cases, output_dir, background_size=32, max_evals=39):
         labels = [FEATURES[k].replace("_", " ") for k in sorted_indices]
         strengths = values[sorted_indices]
         # Polished offline PNG; same numerical explanation as the interactive Risk Lab.
-        fig, ax = plt.subplots(figsize=(8.8, 4.5), facecolor="#101C24")
-        ax.set_facecolor("#101C24")
+        fig, ax = plt.subplots(figsize=(8.8, 4.5), facecolor="#202224")
+        ax.set_facecolor("#202224")
         ax.barh(
             labels,
             strengths,
-            color=["#F0A8A8" if v >= 0 else "#8CE1B6" for v in strengths],
+            color=["#f2aaa0" if v >= 0 else "#e3be72" for v in strengths],
             height=0.68,
         )
-        ax.axvline(0, linewidth=1.0, color="#C6D5CE", alpha=0.6)
-        ax.grid(axis="x", color="#37505B", alpha=0.4, linewidth=0.6)
+        ax.axvline(0, linewidth=1.0, color="#d7d0c3", alpha=0.6)
+        ax.grid(axis="x", color="#45484b", alpha=0.4, linewidth=0.6)
         ax.set_axisbelow(True)
         ax.set_xlabel(
             "SHAP impact on anomaly score · positive = greater suspicion",
-            color="#B8CAC1",
+            color="#cbc7be",
             labelpad=13,
         )
         ax.set_title(
             f"{case['case_type'].replace('_', ' ').title()}  /  Score: {model_score:+.4f}",
-            color="#EEF6F1",
+            color="#f5f1e7",
             fontsize=13,
             fontweight="bold",
             loc="left",
             pad=18,
         )
-        ax.tick_params(axis="both", colors="#CBDDD3", labelsize=9)
+        ax.tick_params(axis="both", colors="#ded8cc", labelsize=9)
         for spine in ax.spines.values():
             spine.set_visible(False)
         fig.tight_layout(pad=1.6)

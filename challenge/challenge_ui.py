@@ -355,7 +355,7 @@ def render_cost_sensitive() -> None:
                 y=curve["total_loss_usd"],
                 mode="lines",
                 name="Validation loss",
-                line={"color": "#8CE1B6"},
+                line={"color": "#e3be72"},
             )
         )
         chart.add_trace(
@@ -364,7 +364,7 @@ def render_cost_sensitive() -> None:
                 y=[chosen["total_loss_usd"]],
                 mode="markers",
                 name="Selected validation minimum",
-                marker={"size": 10, "color": "#E9C38D"},
+                marker={"size": 10, "color": "#c8d0da"},
             )
         )
         chart.update_layout(
@@ -374,7 +374,7 @@ def render_cost_sensitive() -> None:
             template="plotly_dark",
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font={"color": "#EEF6F1"},
+            font={"color": "#f5f1e7"},
             legend={"orientation": "h"},
         )
         st.plotly_chart(chart, width="stretch", config={"displayModeBar": False})

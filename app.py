@@ -71,7 +71,7 @@ def sidebar_controls() -> dict:
         mark("""<div class="vc-brand"><div class="vc-logo" aria-hidden="true">
         <svg viewBox="0 0 40 40" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
         <path d="M7 11 17 31 32 7"/><path d="M17 16 23 25"/><path d="M23 25 33 10"/>
-        </svg></div><div><div class="vc-brand-name">Verdant <span style="color:#8CE1B6">Capital</span></div>
+        </svg></div><div><div class="vc-brand-name">Verdant <span style="color:#e3be72">Capital</span></div>
         <div class="vc-brand-sub">Decision Intelligence</div></div></div>""")
         mark(
             '<div class="vc-sidebar-title">Investment mandate</div><div class="vc-sidebar-help">Configure a portfolio scenario and invite the three specialist agents to review it.</div>'
@@ -200,7 +200,7 @@ def show_agent_cards(result: dict):
         with col:
             html = (
                 f'<div class="vc-panel">{agent_header(name, subtitle, letter, status)}'
-                f'<div class="vc-agent-metric">{safe(big)} <span style="font-size:.74rem;font-weight:500;color:#A8BEB3">{safe(label)}</span></div>'
+                f'<div class="vc-agent-metric">{safe(big)} <span style="font-size:.74rem;font-weight:500;color:#c5beb1">{safe(label)}</span></div>'
                 f'<div class="vc-agent-note">{safe(note)}</div></div>'
             )
             mark(html)

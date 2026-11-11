@@ -5,9 +5,9 @@ from __future__ import annotations
 import pandas as pd
 import plotly.graph_objects as go
 
-TEXT = "#EAF3F0"
-MUTED = "#AABCB5"
-GRID = "rgba(196,218,210,0.09)"
+TEXT = "#f5f1e7"
+MUTED = "#c6c1b7"
+GRID = "rgba(222,216,204,0.12)"
 
 
 def finish(fig: go.Figure, height: int = 300, legend: bool = True) -> go.Figure:
@@ -17,7 +17,7 @@ def finish(fig: go.Figure, height: int = 300, legend: bool = True) -> go.Figure:
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family="Segoe UI, Inter, sans-serif", color=MUTED, size=12),
-        hoverlabel=dict(bgcolor="#182831", font=dict(color=TEXT, size=12)),
+        hoverlabel=dict(bgcolor="#2b2d30", font=dict(color=TEXT, size=12)),
         showlegend=legend,
         legend=dict(
             orientation="h",
@@ -42,7 +42,7 @@ def scenario_comparison(rows: list[dict], baseline: dict[str, float]) -> go.Figu
         name="Base mandate",
         x=labels,
         y=baseline_weights,
-        marker_color="#59778A",
+        marker_color="#8e9bab",
         marker_line_width=0,
         hovertemplate="%{x}: %{y:.1f}%<extra>Base</extra>",
     )
@@ -50,7 +50,7 @@ def scenario_comparison(rows: list[dict], baseline: dict[str, float]) -> go.Figu
         name="Stress event",
         x=labels,
         y=current_weights,
-        marker_color="#7CE0B2",
+        marker_color="#e3be72",
         marker_line_width=0,
         hovertemplate="%{x}: %{y:.1f}%<extra>Event</extra>",
     )
@@ -67,18 +67,18 @@ def precision_recall_curve(curve: dict, base_rate: float) -> go.Figure:
             y=curve["precision"],
             mode="lines",
             name="Rare-event detector",
-            line=dict(color="#7CE0B2", width=3),
+            line=dict(color="#e3be72", width=3),
             fill="tozeroy",
-            fillcolor="rgba(124,224,178,0.08)",
+            fillcolor="rgba(227,190,114,0.08)",
             hovertemplate="Recall: %{x:.1%}<br>Precision: %{y:.1%}<extra></extra>",
         )
     )
     fig.add_hline(
         y=float(base_rate),
-        line=dict(color="#E9C38D", width=1.5, dash="dot"),
+        line=dict(color="#c8d0da", width=1.5, dash="dot"),
         annotation_text="1% random ranking",
         annotation_position="top right",
-        annotation_font_color="#E9C38D",
+        annotation_font_color="#c8d0da",
     )
     finish(fig, height=335)
     fig.update_layout(
@@ -106,7 +106,7 @@ def carbon_forecast_chart(df: pd.DataFrame) -> go.Figure:
             mode="lines",
             line=dict(width=0),
             fill="tonexty",
-            fillcolor="rgba(124,224,178,.11)",
+            fillcolor="rgba(227,190,114,.11)",
             name="Indicative band",
         )
     )
@@ -116,7 +116,7 @@ def carbon_forecast_chart(df: pd.DataFrame) -> go.Figure:
             y=df["yhat"],
             mode="lines",
             name="Model projection",
-            line=dict(width=3, color="#7CE0B2"),
+            line=dict(width=3, color="#e3be72"),
         )
     )
     finish(fig, height=315)
@@ -127,8 +127,8 @@ def carbon_forecast_chart(df: pd.DataFrame) -> go.Figure:
 def feedback_chart(df: pd.DataFrame) -> go.Figure:
     fig = go.Figure()
     for column, name, color in [
-        ("esg_weight", "ESG influence", "#7CE0B2"),
-        ("mkt_weight", "Market influence", "#E9C38D"),
+        ("esg_weight", "ESG influence", "#e3be72"),
+        ("mkt_weight", "Market influence", "#c8d0da"),
     ]:
         if column in df.columns:
             fig.add_trace(
@@ -153,7 +153,7 @@ def feature_attribution(record: dict) -> go.Figure:
     attrs = list(reversed(attrs))
     labels = [str(a.get("feature", "")).replace("_", " ").capitalize() for a in attrs]
     values = [float(a.get("shap_value", 0)) for a in attrs]
-    colors = ["#F0A8A8" if v > 0 else "#8CE1B6" for v in values]
+    colors = ["#f2aaa0" if v > 0 else "#e3be72" for v in values]
     fig = go.Figure()
     fig.add_bar(
         y=labels,
@@ -163,7 +163,7 @@ def feature_attribution(record: dict) -> go.Figure:
         customdata=[["Raises suspicion" if v > 0 else "Lowers suspicion"] for v in values],
         hovertemplate="%{y}<br>%{x:+.4f} · %{customdata[0]}<extra></extra>",
     )
-    fig.add_vline(x=0, line=dict(color="rgba(232,245,238,.45)", width=1))
+    fig.add_vline(x=0, line=dict(color="rgba(245,241,231,.45)", width=1))
     finish(fig, height=315, legend=False)
     fig.update_layout(
         xaxis_title="SHAP impact on anomaly score",

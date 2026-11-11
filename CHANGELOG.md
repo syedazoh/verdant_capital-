@@ -1,5 +1,11 @@
 # Changelog
 
+## Palette update — 2026-11-12
+
+- Changed the studio to charcoal surfaces, warm ivory text and gold accents.
+- Matched interactive charts, exported SHAP plots and runtime screenshots to the new palette.
+- Layout, workflow and numerical results remain unchanged.
+
 ## Submission candidate — 2026-11-11
 
 ### Added

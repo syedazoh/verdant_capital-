@@ -35,7 +35,7 @@ def clean_portfolio(rows: list[dict]) -> list[dict]:
 
 def allocation_strip(rows: list[dict]) -> str:
     """Lightweight allocation graphic; the accompanying ledger supplies exact values."""
-    colors = ["#a4e8bf", "#efd2a2", "#9dbcd3", "#d4a3ce", "#b5c6bc", "#90aaa4"]
+    colors = ["#e3be72", "#f1e5c9", "#9aabc0", "#c3a5b8", "#b8b2a4", "#bfa36e"]
     rows = [row for row in clean_portfolio(rows) if row["weight"] > 0]
     if not rows:
         return '<p class="vc-note">No allocation is available.</p>'
