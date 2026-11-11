@@ -16,8 +16,11 @@ The **Risk Lab** solves the assigned challenge demonstrations:
 - **C06 — Regulatory XAI:** three real held-out observations from the **same
   Isolation Forest** with permutation SHAP feature-attribution PNGs, audit JSON,
   model scores and checked additive reconstruction.
+- **C13 — Decision economics:** editable USD audit/missed-positive costs, an exact
+  validation-loss threshold search, and a separate held-out confusion matrix,
+  economic loss comparison and downloadable audit. See [C13 methodology](docs/C13_DECISION_ECONOMICS.md).
 
-**Important:** The C02/C06 dataset is **synthetically generated**. The scores
+**Important:** The C02/C06/C13 datasets are **synthetically generated**. The scores
 are NOT validated fraud detection on real companies. Fictional demo issuers
 `SOLR`, `WIND` and `FOSS` are not listed securities. The software neither
 approves loans nor trades assets.
@@ -42,6 +45,7 @@ python -m pip install -r requirements.txt
 python -m pytest -q
 python -m challenge.c02_rare_event
 python -m challenge.c06_explainability
+python -m challenge.c13_cost_sensitive
 python -m data.feedback_backtest
 python -m orchestrator.graph
 streamlit run app.py
@@ -51,6 +55,16 @@ Open `http://localhost:8501`. The default is **fictional demo mode**.
 You can convene the boardroom, inspect evidence and conflicts, run a
 **hypothetical** carbon-price shock, compare allocations, and visit the
 **Risk Lab** tab to show the PR curve and three SHAP figures.
+
+The Risk Lab also runs **C13 decision economics** on this machine. Its default
+scenario assumes $100 per audit and $10,000 per missed positive; these are
+illustrative assumptions, not measured losses. Change the costs and click
+**Optimize economic threshold** to recalculate. Export the JSON for the complete
+validation curve, fixed threshold and held-out policy comparisons. For PowerShell:
+
+```powershell
+.\.venv\Scripts\python.exe -m challenge.c13_cost_sensitive --audit-cost 100 --missed-loss 10000
+```
 
 `python -m orchestrator.graph` uses LangGraph after installing requirements;
 a *labeled* pure-Python execution path is available for isolated testing.
@@ -155,6 +169,7 @@ Expected generated files (not committed by default):
 - `data_cache/c02_report.json`
 - `data_cache/c02_pr_curve.json`
 - `data_cache/c06_report.json`
+- `data_cache/c13_report.json` (run `python -m challenge.c13_cost_sensitive`)
 - `data_cache/c06_plots/c06_case_1.png`, `c06_case_2.png`, `c06_case_3.png`
 - `data_cache/feedback_timeline.json`
 
@@ -176,6 +191,7 @@ favorable numbers into the dashboard**.
 | `data/feedback_backtest.py` | Clearly synthetic 30-day feedback example |
 | `challenge/c02_rare_event.py` | Reproducible rare-event performance evaluation |
 | `challenge/c06_explainability.py` | Three SHAP edge-case reports and plots |
+| `challenge/c13_cost_sensitive.py` | Validation-selected economic threshold and held-out cost audit |
 | `tests/` | Regression and acceptance tests |
 | `docs/` | Architecture, requirements mapping, evidence and limitations |
 

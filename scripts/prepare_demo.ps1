@@ -8,6 +8,7 @@ $python = Join-Path (Get-Location) ".venv\Scripts\python.exe"
 & $python -m pytest -q
 & $python -m challenge.c02_rare_event
 & $python -m challenge.c06_explainability
+& $python -m challenge.c13_cost_sensitive
 & $python -m data.feedback_backtest
 & $python -m orchestrator.graph
 Write-Host "Verdant demo evidence generated. Streamlit available at localhost:8501."

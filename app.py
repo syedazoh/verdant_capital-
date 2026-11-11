@@ -256,7 +256,7 @@ def markets_tab(result: dict | None):
 
 def audit_tab(result: dict | None):
     mark(section("Decision audit trail", "A record that shows what the system knew, inferred and constrained.", "Read-only evidence"))
-    mark('<div class="vc-note"><strong>Scope:</strong> Verdant Capital is research decision-support, not regulatory authorization, a lender, or a broker. A missing ESG document is not proof of wrongdoing. C02/C06 are synthetic validation exercises.</div>')
+    mark('<div class="vc-note"><strong>Scope:</strong> Verdant Capital is research decision-support, not regulatory authorization, a lender, or a broker. A missing ESG document is not proof of wrongdoing. C02/C06/C13 are synthetic validation exercises.</div>')
     stored=recent_recommendations(limit=8)
     mark(section("Recommendation register", "Most recent recorded investment mandates."))
     if stored:
@@ -307,7 +307,7 @@ if result is None and inputs["mode"]=="demo" and not control["run"]:
         result=None
 mark(hero(mode=inputs["mode"],preview=preview,last_run=str(result.get("run_id","")) if result else ""))
 
-board,lab,markets,audit=st.tabs(["Investment boardroom", "Risk lab · C02 / C06", "Market intelligence", "Audit trail"])
+board,lab,markets,audit=st.tabs(["Investment boardroom", "Risk lab · C02 / C06 / C13", "Market intelligence", "Audit trail"])
 with board:
     boardroom_tab(result,inputs,preview)
 with lab:

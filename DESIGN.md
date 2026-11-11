@@ -29,7 +29,7 @@ A decision-support workspace where judges and analysts can inspect the evidence,
 ## Information architecture
 
 1. **Investment boardroom** — overview, allocation weights, decision rationale, three specialist cards, material disagreements.
-2. **Risk Lab (C02/C06)** — class imbalance, per-seed PR metrics, confusion matrix, three held-out SHAP cases.
+2. **Risk Lab (C02/C06/C13)** — class imbalance, per-seed PR metrics, confusion matrix, three held-out SHAP cases, and editable decision economics with validation-loss curve and held-out policy comparisons.
 3. **Market intelligence** — time-stamped historical signals, carbon-ETF forecast and explicitly simulated feedback.
 4. **Audit trail** — persisted recommendations, policy reason codes, evidence citations and reproducible commands.
 

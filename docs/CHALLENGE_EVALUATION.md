@@ -1,4 +1,4 @@
-# Verdant Capital — C02 & C06 Evaluation and Audit Evidence
+# Verdant Capital — C02, C06 & C13 Evaluation and Audit Evidence
 
 ## Objective and scope
 
@@ -32,6 +32,14 @@ The 3-agent Verdant Capital architecture evaluates sustainable-investment candid
 - Output three PNG horizontal feature-attribution charts and `data_cache/c06_report.json` with all feature values, thresholds, labels, decision classes, SHAP values and reconstruction values.
 - SHAP is feature attribution, **not causality or proof** of greenwashing. A regulated real-world decision additionally requires reason codes, evidence sources, human-review policy and model documentation.
 
+## C13: decision economics
+
+The Risk Lab includes an explicit USD cost matrix, exact validation-loss threshold
+search, held-out confusion matrix and audit-all/audit-none/default comparisons.
+Costs are editable illustrative assumptions. See
+[C13 methodology and reproduction](C13_DECISION_ECONOMICS.md) for the cost formula,
+independent train/validation/test splits and scope limitations.
+
 ## Reproducible commands
 
 From the root of the repository:
@@ -41,6 +49,7 @@ python -m pip install -r requirements.txt
 python -m pip install -r requirements.txt
 python -m challenge.c02_rare_event
 python -m challenge.c06_explainability
+python -m challenge.c13_cost_sensitive
 python -m pytest -q tests/test_challenge_audit.py
 streamlit run app.py
 ```
