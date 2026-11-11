@@ -16,6 +16,13 @@ An investment research studio that makes evidence gaps, portfolio constraints, a
 
 > Research prototype. No trades or credit decisions. Fictional examples and synthetic benchmarks are labeled. Historical price signals are estimates, not investment advice or demonstrated future returns.
 
+## Seven-slide pitch deck
+
+[PowerPoint with embedded demo](docs/Verdant_Capital_Pitch_Deck.pptx) · [Static PDF preview](docs/Verdant_Capital_Pitch_Deck.pdf) · [Playback guide](docs/PRESENTATION_GUIDE.md)
+
+Mission, problem, solution, product video, C02/C06/C13 evidence and thank you.
+Open slide 4 in desktop PowerPoint Slide Show and click the video to play.
+
 ## Illustrated submission report
 
 [PDF report](docs/Verdant_Capital_Submission_Report.pdf) · [Editable Word document](docs/Verdant_Capital_Submission_Report.docx) · [Standalone HTML](docs/Verdant_Capital_Submission_Report.html) · [Markdown source](docs/SUBMISSION_REPORT.md)

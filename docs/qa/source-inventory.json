@@ -36,9 +36,9 @@
   },
   {
     "path": "CHANGELOG.md",
-    "bytes": 2871,
-    "sha256": "b6fcea1c440830e9a2c602b4d48c2c7a019fac6b458f54d9d22a3574278baa91",
-    "lines": 47,
+    "bytes": 3161,
+    "sha256": "7d777bac14e6c42042c018524e67309aaf9146ca0cfbf19ccc95cec50f02a8a2",
+    "lines": 53,
     "kind": "text"
   },
   {
@@ -85,9 +85,9 @@
   },
   {
     "path": "README.md",
-    "bytes": 14465,
-    "sha256": "f0ba1f9cadfb1a7a0d0d1cc9673ddcbc54ffbf512857c180bb8ba91d50a8b2b6",
-    "lines": 288,
+    "bytes": 14827,
+    "sha256": "bf53c738597e36099817b85b76ac3e864b4f7ec618d35fc30e0c6a542fe96959",
+    "lines": 295,
     "kind": "text"
   },
   {
@@ -305,6 +305,13 @@
     "kind": "text"
   },
   {
+    "path": "docs/PRESENTATION_GUIDE.md",
+    "bytes": 1535,
+    "sha256": "201527609de467d635a905baca03b90034430e7997113bb786eb2ee16b113858",
+    "lines": 30,
+    "kind": "text"
+  },
+  {
     "path": "docs/REPORT_FILES.md",
     "bytes": 1974,
     "sha256": "993ea9052c8c814d2d53fea96092e45a378f89e3565e6e8a328556a9b0c5bbdd",
@@ -331,6 +338,18 @@
     "sha256": "5af17403a2b0db05ddd58931b2fd1dd8ffcb7aa2931682ae3b8560cea1ff34e8",
     "lines": 6,
     "kind": "text"
+  },
+  {
+    "path": "docs/Verdant_Capital_Pitch_Deck.pdf",
+    "bytes": 437636,
+    "sha256": "7a074e8d85f1451e71c0c3114bbfc2c52bfa7ce99a89c396dc79203ce0720960",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/Verdant_Capital_Pitch_Deck.pptx",
+    "bytes": 4912410,
+    "sha256": "c5841dac897278c50d003427011d0279ac44915cf8e7bcb5c052d426efbe4c97",
+    "kind": "binary artifact"
   },
   {
     "path": "docs/Verdant_Capital_Submission_Report.docx",
@@ -389,6 +408,24 @@
     "sha256": "5027f38de6bb9440cc5c79c9a3c6958c6b3c11bce07a9a91426e48dbbd26f3f0",
     "lines": 180,
     "kind": "text"
+  },
+  {
+    "path": "docs/presentation_assets/c02_pitch_curve.png",
+    "bytes": 19914,
+    "sha256": "31febd2892994bfc53b6960fdceb1a252370dd70129cb4e42c574b1abe84bf62",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/presentation_assets/product_demo.mp4",
+    "bytes": 4612911,
+    "sha256": "de50501664cf630127083c1843dfdef77bb824ae96bef97fb5e3b4822635ea10",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/presentation_assets/video_poster.png",
+    "bytes": 261715,
+    "sha256": "a8027d6ab7e857e71582fb1d68d0b0ae4570b0a65b957ce4ddcadb9b2004947e",
+    "kind": "binary artifact"
   },
   {
     "path": "docs/qa/browser-results.json",

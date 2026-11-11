@@ -1,5 +1,11 @@
 # Changelog
 
+## Pitch deck — 2026-11-12
+
+- Added a seven-slide charcoal/gold PowerPoint with speaker notes and an embedded 62-second product video.
+- Added a static PDF preview, standalone MP4 and playback guide.
+- Clearly labeled synthetic challenge evidence and illustrative financial assumptions.
+
 ## Illustrated submission report — 2026-11-12
 
 - Added a 23-page PDF, editable Word document, standalone HTML and Markdown source.
