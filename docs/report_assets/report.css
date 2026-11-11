@@ -1,0 +1,25 @@
+@page { size: A4; margin: 18mm 20mm; }
+body { max-width: 780px; margin: 40px auto; padding: 0 22px; color: #282b2d; background: #fff; font: 11pt/1.55 Calibri, Arial, sans-serif; }
+header { border-bottom: 2px solid #b18a3d; padding-bottom: 18px; margin-bottom: 28px; }
+header .title { font: 38pt/1.15 Georgia, serif; color: #282b2d; margin: 0 0 12px; }
+.subtitle { font-size: 17pt; color: #8e6a2b; margin: 8px 0; }
+.author,.date { color: #68665f; font-size: 10pt; margin: 4px 0; }
+h1 { font: 23pt/1.25 Georgia, serif; color: #282b2d; margin-top: 36px; }
+h2 { font-size: 15pt; color: #8e6a2b; margin: 24px 0 10px; }
+h3 { font-size: 12pt; color: #282b2d; }
+h1,h2,h3 { break-after: avoid; }
+p { orphans: 3; widows: 3; }
+figure { margin: 22px 0; break-inside: avoid; }
+img { max-width: 100%; height: auto; }
+figcaption { font-size: 9pt; line-height: 1.4; color: #5d5b55; font-style: italic; margin-top: 7px; }
+table { border-collapse: collapse; width: 100%; margin: 18px 0; font-size: 9pt; line-height: 1.35; }
+th { background: #282b2d; color: #fff; text-align: left; }
+th,td { padding: 8px; border-bottom: 1px solid #d7d0c3; vertical-align: top; overflow-wrap: anywhere; }
+tr:nth-child(even) td { background: #f6f2e9; }
+tr { break-inside: avoid; }
+thead { display: table-header-group; }
+a { color: #805c1d; }
+pre { background: #f6f2e9; border: 1px solid #ded6c6; padding: 12px; white-space: pre-wrap; font-size: 8pt; }
+code { font-family: Consolas, monospace; font-size: .9em; }
+math[display='block'] { margin: 20px 0; font-size: 1.05em; }
+@media print { body { margin: 0; max-width: none; padding: 0; } body > h1 { break-before: page; } body > h1:first-of-type { break-before: auto; } }

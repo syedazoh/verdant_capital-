@@ -1,0 +1,425 @@
+{
+  "implementation_commit": "501c33a",
+  "date": "2026-11-12",
+  "c02": {
+    "challenge": "C02 Severe Class Imbalance / Rare-Event Stress (99:1)",
+    "data_type": "synthetic",
+    "methodology": "5 independent seeds, each with 20,000 training and 5,000 held-out evaluation samples, exactly 1% positive",
+    "model": "IsolationForest(200 trees, contamination=0.01)",
+    "features": [
+      "vague_language_ratio",
+      "sentiment_gap",
+      "missing_baseline",
+      "no_third_party_verif",
+      "capex_backing_ratio",
+      "intensity_anomaly"
+    ],
+    "seeds": [
+      7,
+      13,
+      21,
+      34,
+      55
+    ],
+    "trials": [
+      {
+        "seed": 7,
+        "eval_size": 5000,
+        "positive_count": 50,
+        "negative_count": 4950,
+        "positive_rate": 0.01,
+        "pr_auc": 0.957579,
+        "average_precision": 0.95782,
+        "precision": 0.886792,
+        "recall": 0.94,
+        "f1": 0.912621,
+        "tn": 4944,
+        "fp": 6,
+        "fn": 3,
+        "tp": 47,
+        "predicted_positives": 53,
+        "precision_at_1pct_flag_rate": 0.92,
+        "lift_over_random": 92.0,
+        "threshold_anomaly_score": 0.0
+      },
+      {
+        "seed": 13,
+        "eval_size": 5000,
+        "positive_count": 50,
+        "negative_count": 4950,
+        "positive_rate": 0.01,
+        "pr_auc": 0.988818,
+        "average_precision": 0.988917,
+        "precision": 0.875,
+        "recall": 0.98,
+        "f1": 0.924528,
+        "tn": 4943,
+        "fp": 7,
+        "fn": 1,
+        "tp": 49,
+        "predicted_positives": 56,
+        "precision_at_1pct_flag_rate": 0.92,
+        "lift_over_random": 92.0,
+        "threshold_anomaly_score": 0.0
+      },
+      {
+        "seed": 21,
+        "eval_size": 5000,
+        "positive_count": 50,
+        "negative_count": 4950,
+        "positive_rate": 0.01,
+        "pr_auc": 0.973582,
+        "average_precision": 0.973738,
+        "precision": 0.958333,
+        "recall": 0.92,
+        "f1": 0.938776,
+        "tn": 4948,
+        "fp": 2,
+        "fn": 4,
+        "tp": 46,
+        "predicted_positives": 48,
+        "precision_at_1pct_flag_rate": 0.94,
+        "lift_over_random": 94.0,
+        "threshold_anomaly_score": 0.0
+      },
+      {
+        "seed": 34,
+        "eval_size": 5000,
+        "positive_count": 50,
+        "negative_count": 4950,
+        "positive_rate": 0.01,
+        "pr_auc": 0.928751,
+        "average_precision": 0.929256,
+        "precision": 0.857143,
+        "recall": 0.84,
+        "f1": 0.848485,
+        "tn": 4943,
+        "fp": 7,
+        "fn": 8,
+        "tp": 42,
+        "predicted_positives": 49,
+        "precision_at_1pct_flag_rate": 0.84,
+        "lift_over_random": 84.0,
+        "threshold_anomaly_score": 0.0
+      },
+      {
+        "seed": 55,
+        "eval_size": 5000,
+        "positive_count": 50,
+        "negative_count": 4950,
+        "positive_rate": 0.01,
+        "pr_auc": 0.942764,
+        "average_precision": 0.94312,
+        "precision": 0.933333,
+        "recall": 0.84,
+        "f1": 0.884211,
+        "tn": 4947,
+        "fp": 3,
+        "fn": 8,
+        "tp": 42,
+        "predicted_positives": 45,
+        "precision_at_1pct_flag_rate": 0.88,
+        "lift_over_random": 88.0,
+        "threshold_anomaly_score": 0.0
+      }
+    ],
+    "positive_rate": 0.01,
+    "eval_size": 5000,
+    "positive_count": 50,
+    "negative_count": 4950,
+    "pr_auc": 0.9583,
+    "pr_auc_mean": 0.9583,
+    "pr_auc_std": 0.0214,
+    "average_precision_mean": 0.9586,
+    "precision_mean": 0.9021,
+    "recall_mean": 0.904,
+    "f1_mean": 0.9017,
+    "precision_at_1pct_flag_rate": 0.9,
+    "lift_over_random": 90.0,
+    "majority_class_accuracy_trap": 0.99,
+    "baseline_average_precision": 0.01,
+    "predicted_positives": 53,
+    "tp": 47,
+    "fp": 6,
+    "tn": 4944,
+    "fn": 3,
+    "no_majority_collapse": true,
+    "verdict": "Synthetic 99:1 stress test only. Model evaluated on held-out labels; performance on real ESG disclosures remains unverified."
+  },
+  "c06": {
+    "challenge": "C06 Explainability and Feature Attribution",
+    "data_type": "synthetic",
+    "model": "IsolationForest anomaly score from C02 seed 7",
+    "method": "Model-agnostic permutation SHAP",
+    "feature_count": 6,
+    "threshold": 0.0,
+    "cases": [
+      {
+        "case_id": 1,
+        "case_type": "true_positive",
+        "requested_case_type": "true_positive",
+        "eval_index": 3960,
+        "data_type": "synthetic",
+        "true_label": 1,
+        "predicted_label": 1,
+        "decision": "flag_for_review",
+        "anomaly_score": 0.00141556,
+        "decision_threshold": 0.0,
+        "base_score": -0.22598368,
+        "reconstructed_score": 0.00141556,
+        "feature_values": {
+          "vague_language_ratio": 0.2686535517368192,
+          "sentiment_gap": 0.17311573242264386,
+          "missing_baseline": 0.0,
+          "no_third_party_verif": 1.0,
+          "capex_backing_ratio": 0.25728805687617085,
+          "intensity_anomaly": 0.36146464737119427
+        },
+        "attributions": [
+          {
+            "feature": "no_third_party_verif",
+            "shap_value": 0.08814664,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "intensity_anomaly",
+            "shap_value": 0.0680859,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "vague_language_ratio",
+            "shap_value": 0.03803479,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "capex_backing_ratio",
+            "shap_value": 0.03646376,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "missing_baseline",
+            "shap_value": -0.01138346,
+            "direction": "lowers_suspicion"
+          },
+          {
+            "feature": "sentiment_gap",
+            "shap_value": 0.0080516,
+            "direction": "raises_suspicion"
+          }
+        ],
+        "plot": "c06_case_1.png"
+      },
+      {
+        "case_id": 2,
+        "case_type": "false_positive",
+        "requested_case_type": "false_positive",
+        "eval_index": 3163,
+        "data_type": "synthetic",
+        "true_label": 0,
+        "predicted_label": 1,
+        "decision": "flag_for_review",
+        "anomaly_score": 0.0017445,
+        "decision_threshold": 0.0,
+        "base_score": -0.22598368,
+        "reconstructed_score": 0.0017445,
+        "feature_values": {
+          "vague_language_ratio": 0.03530908056500098,
+          "sentiment_gap": 0.1387446873719832,
+          "missing_baseline": 1.0,
+          "no_third_party_verif": 1.0,
+          "capex_backing_ratio": 0.6923872630606444,
+          "intensity_anomaly": 0.01499109727728714
+        },
+        "attributions": [
+          {
+            "feature": "missing_baseline",
+            "shap_value": 0.10052287,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "no_third_party_verif",
+            "shap_value": 0.09872645,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "vague_language_ratio",
+            "shap_value": 0.03402312,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "capex_backing_ratio",
+            "shap_value": 0.0087887,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "intensity_anomaly",
+            "shap_value": -0.00783956,
+            "direction": "lowers_suspicion"
+          },
+          {
+            "feature": "sentiment_gap",
+            "shap_value": -0.00649339,
+            "direction": "lowers_suspicion"
+          }
+        ],
+        "plot": "c06_case_2.png"
+      },
+      {
+        "case_id": 3,
+        "case_type": "false_negative",
+        "requested_case_type": "false_negative",
+        "eval_index": 4256,
+        "data_type": "synthetic",
+        "true_label": 1,
+        "predicted_label": 0,
+        "decision": "not_flagged",
+        "anomaly_score": -0.01198364,
+        "decision_threshold": 0.0,
+        "base_score": -0.22598368,
+        "reconstructed_score": -0.01198364,
+        "feature_values": {
+          "vague_language_ratio": 0.08969988383027705,
+          "sentiment_gap": 0.1842218743913919,
+          "missing_baseline": 1.0,
+          "no_third_party_verif": 0.0,
+          "capex_backing_ratio": 0.24405177097573058,
+          "intensity_anomaly": 0.16506463165995072
+        },
+        "attributions": [
+          {
+            "feature": "missing_baseline",
+            "shap_value": 0.11141636,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "capex_backing_ratio",
+            "shap_value": 0.04384076,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "intensity_anomaly",
+            "shap_value": 0.04033871,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "sentiment_gap",
+            "shap_value": 0.01593101,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "vague_language_ratio",
+            "shap_value": 0.00531547,
+            "direction": "raises_suspicion"
+          },
+          {
+            "feature": "no_third_party_verif",
+            "shap_value": -0.00284227,
+            "direction": "lowers_suspicion"
+          }
+        ],
+        "plot": "c06_case_3.png"
+      }
+    ],
+    "limitations": [
+      "Feature values are synthetic and are not taken from company documents.",
+      "SHAP values explain this model's anomaly score, not causality or fraud probability.",
+      "Predictions are review flags, not regulatory approvals or rejections."
+    ]
+  },
+  "c13": {
+    "challenge": "C13 Cost-Sensitive Threshold Optimization",
+    "data_type": "synthetic",
+    "currency": "USD",
+    "seed": 7,
+    "model": "IsolationForest(200 trees, contamination=0.01); C02 specification",
+    "splits": {
+      "train": 20000,
+      "validation": 5000,
+      "test": 5000
+    },
+    "positive_rate": 0.01,
+    "cost_matrix_usd": {
+      "tn": 0.0,
+      "fp": 100.0,
+      "fn": 10000.0,
+      "tp": 100.0
+    },
+    "cost_assumptions": "Illustrative USD per case: every flag incurs an audit; a true-positive audit prevents the modeled loss. No recovery revenue, residual loss, or audit-capacity limit modeled.",
+    "loss_formula": "TP \u00d7 audit cost + FP \u00d7 audit cost + FN \u00d7 missed loss; TN costs zero",
+    "selection": "Exact minimum validation loss across all distinct score boundaries; ties prefer fewer audits then higher threshold. Flag iff anomaly score > threshold.",
+    "selected_validation": {
+      "threshold": -0.031598258945116586,
+      "tp": 49,
+      "fp": 35,
+      "fn": 1,
+      "tn": 4915,
+      "flagged": 84,
+      "audit_cost_usd": 8400.0,
+      "missed_loss_usd": 10000.0,
+      "total_loss_usd": 18400.0,
+      "precision": 0.5833333333333334,
+      "recall": 0.98
+    },
+    "test": {
+      "optimized": {
+        "threshold": -0.031598258945116586,
+        "tp": 49,
+        "fp": 30,
+        "fn": 1,
+        "tn": 4920,
+        "flagged": 79,
+        "audit_cost_usd": 7900.0,
+        "missed_loss_usd": 10000.0,
+        "total_loss_usd": 17900.0,
+        "precision": 0.620253164556962,
+        "recall": 0.98
+      },
+      "default": {
+        "threshold": 0.0,
+        "tp": 47,
+        "fp": 5,
+        "fn": 3,
+        "tn": 4945,
+        "flagged": 52,
+        "audit_cost_usd": 5200.0,
+        "missed_loss_usd": 30000.0,
+        "total_loss_usd": 35200.0,
+        "precision": 0.9038461538461539,
+        "recall": 0.94
+      },
+      "audit_none": {
+        "threshold": 0.14048715014917568,
+        "tp": 0,
+        "fp": 0,
+        "fn": 50,
+        "tn": 4950,
+        "flagged": 0,
+        "audit_cost_usd": 0.0,
+        "missed_loss_usd": 500000.0,
+        "total_loss_usd": 500000.0,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "audit_all": {
+        "threshold": -0.2911185183348426,
+        "tp": 50,
+        "fp": 4950,
+        "fn": 0,
+        "tn": 0,
+        "flagged": 5000,
+        "audit_cost_usd": 500000.0,
+        "missed_loss_usd": 0.0,
+        "total_loss_usd": 500000.0,
+        "precision": 0.01,
+        "recall": 1.0
+      }
+    },
+    "test_savings_vs_default_usd": 17300.0,
+    "limitations": [
+      "Synthetic cases and assumed costs; no demonstrated real-world financial savings or default prediction.",
+      "The validation minimum is not a guaranteed test or production minimum; negative test savings are retained.",
+      "Independent synthetic splits share a generator; real deployment needs issuer/time splits and measured costs.",
+      "C13 is a separate benchmark and does not change portfolio allocations or C02/C06 thresholds."
+    ]
+  }
+}

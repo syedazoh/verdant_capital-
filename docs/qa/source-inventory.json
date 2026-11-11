@@ -36,9 +36,9 @@
   },
   {
     "path": "CHANGELOG.md",
-    "bytes": 2486,
-    "sha256": "a528a514c98a87545bf3dbe63ad41990d560eea93d6e35afe839a0e928b96abe",
-    "lines": 41,
+    "bytes": 2871,
+    "sha256": "b6fcea1c440830e9a2c602b4d48c2c7a019fac6b458f54d9d22a3574278baa91",
+    "lines": 47,
     "kind": "text"
   },
   {
@@ -78,16 +78,16 @@
   },
   {
     "path": "QA_REPORT.md",
-    "bytes": 13479,
-    "sha256": "6e0f438b7f0aa022d12aa797dedd84045720f5ee29cee10b7d6c7413d1fb8f6b",
+    "bytes": 13509,
+    "sha256": "f4fa077f8fb273212d7636233e449a7049b13cd28e993813a9b56c640d3cad60",
     "lines": 180,
     "kind": "text"
   },
   {
     "path": "README.md",
-    "bytes": 13903,
-    "sha256": "dff3fba06cdcb51194505cb0c9cd629ebaf0189cfea9da96723d339da64cc1a2",
-    "lines": 279,
+    "bytes": 14465,
+    "sha256": "f0ba1f9cadfb1a7a0d0d1cc9673ddcbc54ffbf512857c180bb8ba91d50a8b2b6",
+    "lines": 288,
     "kind": "text"
   },
   {
@@ -305,10 +305,24 @@
     "kind": "text"
   },
   {
+    "path": "docs/REPORT_FILES.md",
+    "bytes": 1974,
+    "sha256": "993ea9052c8c814d2d53fea96092e45a378f89e3565e6e8a328556a9b0c5bbdd",
+    "lines": 34,
+    "kind": "text"
+  },
+  {
     "path": "docs/SUBMISSION_CHECKLIST.md",
     "bytes": 717,
     "sha256": "92a5eac585dc1c66a00ae4c2050581f708466c533c355a1f30936035dabf4a81",
     "lines": 12,
+    "kind": "text"
+  },
+  {
+    "path": "docs/SUBMISSION_REPORT.md",
+    "bytes": 45451,
+    "sha256": "e6075d12023cf7bfe423df93561bab718aa284b4b18e6802369f2e5f235b3dd8",
+    "lines": 553,
     "kind": "text"
   },
   {
@@ -317,6 +331,25 @@
     "sha256": "5af17403a2b0db05ddd58931b2fd1dd8ffcb7aa2931682ae3b8560cea1ff34e8",
     "lines": 6,
     "kind": "text"
+  },
+  {
+    "path": "docs/Verdant_Capital_Submission_Report.docx",
+    "bytes": 1488667,
+    "sha256": "e7107948b50d9b1d24b4a0c6f67843b9d9e503f1fa9eba8e3af483a641bb79cb",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/Verdant_Capital_Submission_Report.html",
+    "bytes": 2155203,
+    "sha256": "230a5ef544b2f7c4bda353f3aee4f71f54dc4060542d0a0d3afdc73476963f34",
+    "lines": 1649,
+    "kind": "text"
+  },
+  {
+    "path": "docs/Verdant_Capital_Submission_Report.pdf",
+    "bytes": 1826297,
+    "sha256": "ca79a5fdb2b85ec590af46e62aaa47043bd1d93e5fa48b6debc78e884ea4f6d2",
+    "kind": "binary artifact"
   },
   {
     "path": "docs/evidence/c02_pr_curve.json",
@@ -377,6 +410,87 @@
     "sha256": "1edecea84a42fd05b54c0d456fefcbfc421fcba86b92347ae31f7702754029ee",
     "lines": 200,
     "kind": "text"
+  },
+  {
+    "path": "docs/report_assets/architecture.png",
+    "bytes": 117253,
+    "sha256": "0cdf8d280d0fb259887f96bf0f6474a9bcb4bdcdcd8cc6859304de54a05c7013",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/c02_confusion_seeds.png",
+    "bytes": 70625,
+    "sha256": "e355cb9d0f1714c89a80965d8a45158aa38a91df840ad95f8ac0f9ff5afbc8e7",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/c02_pr_curve.png",
+    "bytes": 56773,
+    "sha256": "ddb0adbef7f74e74dfc6819ab7e60df3bf4974a813f54c0873b46ef350ea5c87",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/c06_interface.png",
+    "bytes": 145746,
+    "sha256": "68d0c0972df04217cd42d9f61a6e4fbb60fed421c0a8f341185fbd0b27b6c229",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/c13_split.png",
+    "bytes": 58507,
+    "sha256": "61738acc5435c9d20e46925769a1194afc5f2ea9226eb14aaf4256a369e03757",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/c13_test_comparison.png",
+    "bytes": 97031,
+    "sha256": "0ac5c5d6c1f2005c6ef6719f7f22a5798a076264f15b769f41431b7259df4316",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/c13_validation_curve.csv",
+    "bytes": 224800,
+    "sha256": "b69e7674b19f4ab5f7b5790184664e170ac897e6fdce40f338ac68699ccff194",
+    "lines": 5002,
+    "kind": "text"
+  },
+  {
+    "path": "docs/report_assets/c13_validation_loss.png",
+    "bytes": 109671,
+    "sha256": "09a04006ba7b7966364cfcff3aeff26cea1398b6b0f16ca53ae470f658de4586",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/esg_evidence.png",
+    "bytes": 147675,
+    "sha256": "f6d331f5b281db5a0950b67165608836570e21df10b8a2df0b2892436f90cc02",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/portfolio_detail.png",
+    "bytes": 148046,
+    "sha256": "46d76c24e3d1a413580a3dc71e8b7c48b19c247168277afaa30287f28e8e0a54",
+    "kind": "binary artifact"
+  },
+  {
+    "path": "docs/report_assets/report.css",
+    "bytes": 1684,
+    "sha256": "14eba386dee4a61ee26015af9f97a3a278c0cbe731d3268babb5ed2c062f0ce0",
+    "lines": 25,
+    "kind": "text"
+  },
+  {
+    "path": "docs/report_assets/report_evidence.json",
+    "bytes": 12842,
+    "sha256": "604b62c074f46741c0b6e91162026ee72e6c356a2a1e413a8bdde8e1a4bed83e",
+    "lines": 425,
+    "kind": "text"
+  },
+  {
+    "path": "docs/report_assets/risk_lab.png",
+    "bytes": 146308,
+    "sha256": "5c55fe41363422e81994fa63dbe596664182a42458818e53e9910c6e5ade6dea",
+    "kind": "binary artifact"
   },
   {
     "path": "docs/screenshots/boardroom-desktop.png",

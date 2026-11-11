@@ -16,6 +16,15 @@ An investment research studio that makes evidence gaps, portfolio constraints, a
 
 > Research prototype. No trades or credit decisions. Fictional examples and synthetic benchmarks are labeled. Historical price signals are estimates, not investment advice or demonstrated future returns.
 
+## Illustrated submission report
+
+[PDF report](docs/Verdant_Capital_Submission_Report.pdf) · [Editable Word document](docs/Verdant_Capital_Submission_Report.docx) · [Standalone HTML](docs/Verdant_Capital_Submission_Report.html) · [Markdown source](docs/SUBMISSION_REPORT.md)
+
+The report starts with our Pillar 2 mission, then covers the problem, specialist
+workflow, formulas, constraints, C02/C06/C13 evidence and conclusions. It includes
+15 actual screenshots and analytical figures, with synthetic results and
+financial assumptions explicitly identified.
+
 ## What it does
 
 Verdant brings a mandate through three distinct responsibilities: examine ESG

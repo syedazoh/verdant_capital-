@@ -116,7 +116,7 @@ zoom/forced-colors and complete WCAG 2.2 testing remain unverified.
 
 - Default loopback binding; Compose publishes loopback only. XSRF/CORS enabled, usage telemetry off, detailed browser tracebacks disabled.
 - Custom HTML escapes variable text. SQL values are parameterized. Optional model output is validated; citations come from registered source records. Optional provider calls have timeouts and bounded retries.
-- Provider caches and generated JSON/CSV are atomically replaced. Source ZIPs do not contain `.git`, `.env` variants, PDFs, data caches, local databases or untracked files.
+- Provider caches and generated JSON/CSV are atomically replaced. Source ZIPs do not contain `.git`, `.env` variants, private issuer PDFs, data caches, local databases or untracked files.
 - Recognizable secret-pattern scanning and Python/JSON parsing are recorded in the source inventory tooling. This is heuristic inspection, not proof that arbitrary secrets can never exist.
 - There is **no login, account authorization, tenant isolation or append-only/tamper-proof audit system**. Shared local SQLite records are visible to anyone with access to this app. Unauthenticated access to the intended local workspace is expected behavior, not a passed SaaS authentication test.
 - Public or multi-user deployment is blocked until authentication, tenant-scoped storage, retention, rate limits and deployment security are designed and verified.
@@ -149,7 +149,7 @@ not executable source. Installed third-party libraries were dependency-scanned,
 not represented as line-by-line audited project code.
 
 The release script packages only intended tracked source. Mutable `.env`, price
-caches, PDFs, provider caches, SQLite state, temporary QA tools and installed
+caches, private issuer PDFs, provider caches, SQLite state, temporary QA tools and installed
 virtual environments are excluded. The archive contains the updated README,
 QA report, changelog, environment template, source, tests, configs, attribution and
 actual screenshots. GitHub `main` is the source of truth after the final push.

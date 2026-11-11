@@ -1,5 +1,11 @@
 # Changelog
 
+## Illustrated submission report — 2026-11-12
+
+- Added a 23-page PDF, editable Word document, standalone HTML and Markdown source.
+- Included 15 actual screenshots and analytical figures covering the mission, specialist calculations, C02/C06/C13 results and conclusions.
+- Added report evidence JSON and the validation-loss curve CSV; investment and evaluation logic are unchanged.
+
 ## Windows report-write fix — 2026-11-12
 
 - Serialize in-process report writes and retry bounded Windows access/sharing violations during atomic replacement.
